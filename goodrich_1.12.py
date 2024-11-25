@@ -113,5 +113,10 @@ def custom_rev(a_list: list):
         new_list[new_index] = a_list[rev_index]
     return new_list    
 
-print(custom_rev(["apple", "banana", "cherry", "delta", "epsilon"]))
+def custom_rev_comprehension(a_list: list):
+    newlist = []
+    newlist = [x for x in a_list[::-1]]
+    return newlist
 
+print(custom_rev(["apple", "banana", "cherry", "delta", "epsilon"]))
+print(custom_rev_comprehension(["apple", "banana", "cherry", "delta", "epsilon"]))
