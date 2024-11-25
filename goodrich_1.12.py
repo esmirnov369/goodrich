@@ -1,3 +1,4 @@
+import random
 #Write a short Python function, is multiple(n, m), that takes two integer
 #values and returns True if n is a multiple of m, that is, n = mi for some
 #integer i, and False otherwise
@@ -75,6 +76,36 @@ def sum_odd_squares_sugar(n :int):
 
 #What parameters should be sent to the range constructor, to produce a
 #range with values 50, 60, 70, 80?
+
+#Demonstrate how to use Python’s list comprehension syntax to produce
+#the list [1, 2, 4, 8, 16, 32, 64, 128, 256].
+print([2**x for x in range(1,8+1)])
+
+#Python’s random module includes a function choice(data) that returns a
+#random element from a non-empty sequence. The random module includes a more basic function randrange, with parameterization similar to
+#the built-in range function, that return a random choice from the given
+#range. Using only the randrange function, implement your own version
+#of the choice function.
+
+a_list = ['a','b','c','d']
+ranindex = random.randrange(0,len(a_list))
+
+
+#Write a pseudo-code description of a function that reverses a list of n
+#integers, so that the numbers are listed in the opposite order than they
+#were before, and compare this method to an equivalent Python function
+#for doing the same thing.
+
+def custom_rev(a_list: list):
+    new_list = [None] * len(a_list)
+    for x in range(0,len(a_list)):
+        new_index = x
+        rev_index = (x*-1)-1    
+        print(a_list[rev_index])
+        new_list[new_index] = a_list[rev_index]
+    return new_list    
+
+print(custom_rev(["apple", "banana", "cherry", "delta", "epsilon"]))
 
 print([x for x in range(50,80+1,10)])
 
