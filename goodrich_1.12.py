@@ -188,3 +188,19 @@ print(x)
 
 abc_list = [chr(x) for x in range(97,97+26)]
 print(abc_list)
+
+#Python’s random module includes a function shuffle(data) that accepts a
+#list of elements and randomly reorders the elements so that each possible order occurs with equal probability. The random module includes a
+#more basic function randint(a, b) that returns a uniformly random integer
+#from a to b (including both endpoints). Using only the randint function,
+#implement your own version of the shuffle function.
+
+def custom_shuffle(my_list: list):
+    newlist = []
+    for x in my_list:
+        newlist.append(my_list.pop(random.randint(0,len(my_list))))
+    return newlist
+
+ma_list = ["apple", "banana", "cherry", "delta", "epsilon"]
+print(custom_shuffle(ma_list))
+
