@@ -89,10 +89,20 @@ print([2**x for x in range(1,8+1)])
 
 a_list = ['a','b','c','d']
 ranindex = random.randrange(0,len(a_list))
-print(a_list[ranindex])
 
 
 #Write a pseudo-code description of a function that reverses a list of n
 #integers, so that the numbers are listed in the opposite order than they
 #were before, and compare this method to an equivalent Python function
 #for doing the same thing.
+
+def custom_rev(a_list: list):
+    new_list = [None] * len(a_list)
+    for x in range(0,len(a_list)):
+        new_index = x
+        rev_index = (x*-1)-1    
+        print(a_list[rev_index])
+        new_list[new_index] = a_list[rev_index]
+    return new_list    
+
+print(custom_rev(["apple", "banana", "cherry", "delta", "epsilon"]))
