@@ -120,3 +120,71 @@ def custom_rev_comprehension(a_list: list):
 
 print(custom_rev(["apple", "banana", "cherry", "delta", "epsilon"]))
 print(custom_rev_comprehension(["apple", "banana", "cherry", "delta", "epsilon"]))
+
+
+#Write a short Python function that takes a sequence of integer values and
+#determines if there is a distinct pair of numbers in the sequence whose
+#product is odd.
+
+def pair_that_produces_odd(a_list: list):
+    for i, vala in enumerate(a_list):
+        for j, valb in enumerate(a_list):
+            if i!=j:
+                if (vala * valb) % 2 != 0:
+                    valuepair = vala,valb
+                    return valuepair
+                
+print(pair_that_produces_odd([1,4]))     
+
+#Write a Python function that takes a sequence of numbers and determines
+#if all the numbers are different from each other (that is, they are distinct)
+def are_all_items_unique(a_list:list):
+    return(len(set(a_list))==len(a_list))
+
+a_list = ['a','ab','c','d']
+print(are_all_items_unique(a_list))
+
+#In our implementation of the scale function (page 25), the body of the loop
+#executes the command data[j] = factor. We have discussed that numeric
+#types are immutable, and that use of the = operator in this context causes
+##the creation of a new instance (not the mutation of an existing instance).
+#How is it still possible, then, that our implementation of scale changes the
+#actual parameter sent by the caller?
+
+def scale(data, factor):
+    for j in range(len(data)):
+        data[j] = factor
+
+a_list = [1,2,3,4,5]
+scale(a_list,5)
+print(a_list)
+
+#it changes because we're modifying the list, not the numbers 
+# (but a function with no return statement is weird af for me anyways)
+
+
+#C-1.17 Had we implemented the scale function (page 25) as follows, does it work
+#properly?
+
+def scale2(data, factor):
+    for val in data:
+        val = factor
+
+a_list = [1,2,3,4,5]
+scale2(a_list,5)
+print(a_list)
+
+#no, b/c numeric values are immutable
+
+#C-1.18 Demonstrate how to use Python’s list comprehension syntax to produce
+#the list [0, 2, 6, 12, 20, 30, 42, 56, 72, 90].
+x = [i * (i + 1) for i in range(10)]
+print(x)
+
+#Demonstrate how to use Python’s list comprehension syntax to produce
+#the list [ a , b , c , ..., z ], but without having to type all 26 such
+#characters literally.
+
+
+abc_list = [chr(x) for x in range(97,97+26)]
+print(abc_list)
