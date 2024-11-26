@@ -1,4 +1,5 @@
 import random
+import sys
 #Write a short Python function, is multiple(n, m), that takes two integer
 #values and returns True if n is a multiple of m, that is, n = mi for some
 #integer i, and False otherwise
@@ -197,10 +198,21 @@ print(abc_list)
 
 def custom_shuffle(my_list: list):
     newlist = []
-    for x in my_list:
-        newlist.append(my_list.pop(random.randint(0,len(my_list))))
+    for x in range(len(my_list)):
+        randindex = random.randint(0,len(my_list)-1)
+        newlist.append(my_list.pop(randindex))
     return newlist
 
 ma_list = ["apple", "banana", "cherry", "delta", "epsilon"]
 print(custom_shuffle(ma_list))
 
+#Write a Python program that repeatedly reads lines from standard input
+#until an EOFError is raised, and then outputs those lines in reverse order
+#(a user can indicate end of input by typing ctrl-D).
+
+#for line in sys.stdin:
+#  print(line[::-1])
+
+#Write a short Python program that takes two arrays a and b of length n
+#storing int values, and returns the dot product of a and b. That is, it returns
+#an array c of length n such that c[i] = a[i] · b[i], for i = 0,...,n−1
