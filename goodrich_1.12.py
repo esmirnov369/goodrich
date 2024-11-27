@@ -279,3 +279,45 @@ def vowel_counter(string: str):
 
 
 # print(vowel_counter("terrapin tester eats"))
+
+# Write a short Python function that takes a string s, representing a sentence,
+# and returns a copy of the string with all punctuation removed. For example,
+# if given the string "Let s try, Mike.", this function would return
+# "Lets try Mike".
+
+def punct_remover(string: str):
+    punct = "!\"#$%&'()*+,-./:;<=>?@[\]^_`{{||}}~"
+    newstring = ''
+    for x in string:
+        if x not in punct:
+            newstring = newstring + x
+    return newstring
+
+
+print(punct_remover('"Let\'s try, Mike.'))
+
+# Write a short program that takes as input three integers, a, b, and c, from
+# the console and determines if they can be used in a correct arithmetic
+# formula (in the given order), like “a+b = c,” “a = b−c,” or “a ∗ b = c.”
+
+
+def check_arithmentics(a: int, b: int, c: int):
+    try:
+        a + b + c
+    except:
+        return ("Addition failure")
+    try:
+        a = b - c
+    except:
+        return ("Subtraction failure")
+    try:
+        c = a * b
+    except:
+        return ("Multiplication failure")
+    return ("all ok")
+
+
+a = int(input("Enter a "))
+b = int(input("Enter b "))
+c = int(input("Enter c "))
+print(check_arithmentics(a, b, c))
