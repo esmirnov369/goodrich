@@ -87,17 +87,17 @@ def sum_odd_squares_sugar(n: int):
 
 # What parameters should be sent to the range constructor, to produce a
 # range with values 50, 60, 70, 80?
-print([x for x in range(50, 80+1, 10)])
+# print([x for x in range(50, 80+1, 10)])
 
 # What parameters should be sent to the range constructor, to produce a
 # range with values 8, 6, 4, 2, 0, −2, −4, −6, −8?
 
-print([x for x in range(8, -8-1, -2)])
+# print([x for x in range(8, -8-1, -2)])
 
 # Demonstrate how to use Python’s list comprehension syntax to produce
 # the list [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-print([2*x for x in range(1, 10)])
+# print([2*x for x in range(1, 10)])
 
 
 # Python’s random module includes a function choice(data) that returns a
@@ -131,9 +131,9 @@ def custom_rev_comprehension(a_list: list):
     return newlist
 
 
-print(custom_rev(["apple", "banana", "cherry", "delta", "epsilon"]))
-print(custom_rev_comprehension(
-    ["apple", "banana", "cherry", "delta", "epsilon"]))
+# print(custom_rev(["apple", "banana", "cherry", "delta", "epsilon"]))
+# print(custom_rev_comprehension(
+#    ["apple", "banana", "cherry", "delta", "epsilon"]))
 
 
 # Write a short Python function that takes a sequence of integer values and
@@ -149,7 +149,7 @@ def pair_that_produces_odd(a_list: list):
                     return valuepair
 
 
-print(pair_that_produces_odd([1, 4]))
+# print(pair_that_produces_odd([1, 4]))
 
 # Write a Python function that takes a sequence of numbers and determines
 # if all the numbers are different from each other (that is, they are distinct)
@@ -160,7 +160,7 @@ def are_all_items_unique(a_list: list):
 
 
 a_list = ['a', 'ab', 'c', 'd']
-print(are_all_items_unique(a_list))
+# print(are_all_items_unique(a_list))
 
 # In our implementation of the scale function (page 25), the body of the loop
 # executes the command data[j] = factor. We have discussed that numeric
@@ -177,7 +177,7 @@ def scale(data, factor):
 
 a_list = [1, 2, 3, 4, 5]
 scale(a_list, 5)
-print(a_list)
+# print(a_list)
 
 # it changes because we're modifying the list, not the numbers
 # (but a function with no return statement is weird af for me anyways)
@@ -193,14 +193,14 @@ def scale2(data, factor):
 
 a_list = [1, 2, 3, 4, 5]
 scale2(a_list, 5)
-print(a_list)
+# print(a_list)
 
 # no, b/c numeric values are immutable
 
 # C-1.18 Demonstrate how to use Python’s list comprehension syntax to produce
 # the list [0, 2, 6, 12, 20, 30, 42, 56, 72, 90].
 x = [i * (i + 1) for i in range(10)]
-print(x)
+# print(x)
 
 # Demonstrate how to use Python’s list comprehension syntax to produce
 # the list [ a , b , c , ..., z ], but without having to type all 26 such
@@ -208,7 +208,7 @@ print(x)
 
 
 abc_list = [chr(x) for x in range(97, 97+26)]
-print(abc_list)
+# print(abc_list)
 
 # Python’s random module includes a function shuffle(data) that accepts a
 # list of elements and randomly reorders the elements so that each possible order occurs with equal probability. The random module includes a
@@ -226,7 +226,7 @@ def custom_shuffle(my_list: list):
 
 
 ma_list = ["apple", "banana", "cherry", "delta", "epsilon"]
-print(custom_shuffle(ma_list))
+# print(custom_shuffle(ma_list))
 
 # Write a Python program that repeatedly reads lines from standard input
 # until an EOFError is raised, and then outputs those lines in reverse order
@@ -250,4 +250,32 @@ def get_dot_product(a_list: list, b_list: list):
 
 x = [1, 2, 3, 4]
 y = [3, 4, 5, 6]
-print(get_dot_product(x, y))
+# print(get_dot_product(x, y))
+
+
+# Give an example of a Python code fragment that attempts to write an element to a list based on an index that may be out of bounds. If that index
+# is out of bounds, the program should catch the exception that results, and
+# print the following error message:
+# “Don’t try buffer overflow attacks in Python!”
+
+err_list = [1, 2, 3]
+try:
+    err_list[3] = 4
+except IndexError:
+    print("Don’t try buffer overflow attacks in Python!")
+
+
+# Write a short Python function that counts the number of vowels in a given
+# character string.
+
+def vowel_counter(string: str):
+    count = 0
+    vowels = 'aeiouAEIOU'
+    a_list = list(string)
+    for i in range(len(a_list)):
+        if a_list[i] in vowels:
+            count = count + 1
+    return count
+
+
+# print(vowel_counter("terrapin tester eats"))
