@@ -357,7 +357,8 @@ def factors(n):  # generator that computes factors
 
 def p_norm(v: list, p=2):
     presum = sum([x ** p for x in v])
-    return presum
+    p_norm = pow(presum,float(1/p))
+    return p_norm
 
 
-print(p_norm([3, 4]))
+print(p_norm([3, 4],3))
