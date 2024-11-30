@@ -332,13 +332,32 @@ def check_arithmentics(a: int, b: int, c: int):
 
 def factors(n):  # generator that computes factors
     k = 1
-    while k * k <= n:  # while k < sqrt(n)
+    while k * k < n:  # while k < sqrt(n)
         if n % k == 0:
             yield k
             yield n // k
         k += 1
+    if k * k == n:  # special case if n is perfect square
+        yield k
 
 
 # Driver code to check above generator function
-for value in factors(25):
-    print(value)
+# for value in factors(25):
+    # print(value)
+
+# there are many solutions to the problem, but I think those:
+# 1) sabotage the concept of a generator, becuase the benefit of a gen is
+# asking it to generate one thing at a time 2)
+# the generator conceptually already works in reversed order
+
+# Give an implementation of a function named norm such that norm(v, p) returns the p-norm
+# value of v and norm(v) returns the Euclidean norm of v. You may assume
+# that v is a list of numbers.
+
+
+def p_norm(v: list, p=2):
+    presum = sum([x ** p for x in v])
+    return presum
+
+
+print(p_norm([3, 4]))
