@@ -362,3 +362,12 @@ def p_norm(v: list, p=2):
 
 
 print(p_norm([3, 4],3))
+
+#P-1.29 # Write a Python program that outputs all possible strings formed by using
+# the characters c , a , t , d , o , and g exactly once
+
+list_a = ['c','a,','t','d','o','g']
+def all_combos_letter(strlist: list):
+    transmutations_list = []
+    for x in list_a:
+        
