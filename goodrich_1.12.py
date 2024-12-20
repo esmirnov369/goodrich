@@ -357,17 +357,41 @@ def factors(n):  # generator that computes factors
 
 def p_norm(v: list, p=2):
     presum = sum([x ** p for x in v])
-    p_norm = pow(presum,float(1/p))
+    p_norm = pow(presum, float(1/p))
     return p_norm
 
 
-print(p_norm([3, 4],3))
+print(p_norm([3, 4], 3))
 
-#P-1.29 # Write a Python program that outputs all possible strings formed by using
+# P-1.29 # Write a Python program that outputs all possible strings formed by using
 # the characters c , a , t , d , o , and g exactly once
 
-list_a = ['c','a,','t','d','o','g']
-def all_combos_letter(strlist: list):
-    transmutations_list = []
-    for x in list_a:
-        
+list_a = list('catdog')
+
+
+def permutation(lst: list):
+    # If lst is empty then there are no permutations
+    if len(lst) == 0:
+        return []
+
+    # If there is only one element in lst then, only
+    # one permutation is possible
+    if len(lst) == 1:
+        return [lst]
+    loclist = []
+    for i in range(len(lst)):
+        m = lst[i]
+
+        # Extract lst[i] or m from the list.  remLst is
+        # remaining list
+        remLst = lst[:i] + lst[i+1:]
+
+        # Generating all permutations where m is first
+        # element
+        for p in permutation(remLst):
+            loclist.append([m] + p)
+    return loclist
+
+
+for p in permutation(list_a):
+    print(p)
