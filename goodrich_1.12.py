@@ -369,7 +369,7 @@ print(p_norm([3, 4], 3))
 list_a = list('catdog')
 
 
-def permutation(lst: list):
+def recursive_permutations(lst: list):
     # If lst is empty then there are no permutations
     if len(lst) == 0:
         return []
@@ -388,10 +388,53 @@ def permutation(lst: list):
 
         # Generating all permutations where m is first
         # element
-        for p in permutation(remLst):
+        for p in recursive_permutations(remLst):
             loclist.append([m] + p)
     return loclist
 
 
-for p in permutation(list_a):
-    print(p)
+# for p in recursive_permutations(list_a):
+#    print(p)
+
+
+#  P-1.30 Write a Python program that can take a positive integer greater than 2 as
+#  input and write out the number of times one must repeatedly divide this
+#  number by 2 before getting a value less than 2.
+
+def div_by_two(number):
+    counter = 1
+    dividable = number
+    while (dividable / 2) >= 2:
+        dividable = dividable / 2
+        counter = counter + 1
+    return f"{counter} times"
+
+
+print(div_by_two(8))
+
+# P-1.31 Write a Python program that can “make change.” Your program should
+# take two numbers as input, one that is a monetary amount charged and the
+# other that is a monetary amount given. It should then return the number
+# of each kind of bill and coin to give back as change for the difference
+# between the amount given and the amount charged. The values assigned
+# to the bills and coins can be based on the monetary system of any current
+# or former government. Try to design your program so that it returns as
+# few bills and coins as possible
+
+
+def make_change(charge, given):
+    nominals = {
+        1: "one rouble coin",
+        2: "two rouble coin",
+        5: "five rouble coin",
+        10: "10 rouble coin",
+        100: "hundred rouble banknote",
+        500: "five hundred rouble banknote",
+        1000: "thousand rouble banknote",
+        5000: "five thousand rouble banknote"
+    }
+    rawchange = given - charge
+    if rawchange > 0:
+        for item in
+
+    return change
