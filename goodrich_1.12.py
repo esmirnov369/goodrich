@@ -453,17 +453,32 @@ def make_change(charge, given):
 # again.” Your program should number each of the sentences and it should
 # make eight different random-looking typos.
 
-string_source = 'I will never spam my friends again.'
+string_source = 'A will never spam my friends again.'
 
+
+def make_typo(x):
+    if ord(x) in [65, 97]:
+        shift = random.randint(1,2)
+    elif ord(x) in [90, 122]:
+        shift =  random.randint(-2,-1)
+    else:
+        shift =(random.sample([-1,1],1)[0])
+    z = chr(ord(x) + shift)   
+    #print(f"changed {x} {ord(x)} into {z} with a {shift} shift")    
+    return z
 
 def make_typos_repeat(n_times, n_typos, string_source):
-    for x in range(1, n_times+1):
+    for times in range(1, n_times+1):
         charlist = list(string_source)
+        az_indices = []
         typos_made = []
-        typo_to_make = random.randint(0, 1)
-        for x in range(0, n_typos):
-            newtypo = random
-            print(f"{x} {charlist}")
+        for x in range(0,len(charlist)):
+            if charlist[x].isalpha():
+                az_indices.append(x)
+        random_elements = random.sample(az_indices, n_typos)
+        for x in random_elements:
+            charlist[x] = make_typo(charlist[x])
+        print(f"{times} {''.join(charlist)}")
 
 
-make_typos_repeat(3, 1, string_source)
+make_typos_repeat(30, 3, string_source)
