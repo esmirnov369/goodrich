@@ -435,6 +435,7 @@ def make_change(charge, given):
     }
     rawchange = given - charge
     if rawchange > 0:
-        for item in
+        for item in nominals.key():
+            print(item)
 
-    return change
+    return rawchange
