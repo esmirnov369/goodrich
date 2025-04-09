@@ -433,8 +433,36 @@ def make_change(charge, given):
         1000: "thousand rouble banknote",
         5000: "five thousand rouble banknote"
     }
+    change_notes = {key:0 for key in nominals.keys()}
     rawchange = given - charge
     if rawchange > 0:
-        for item in
+        for denom in sorted(nominals.keys(),reverse=True):
+          while denom <= rawchange:
+               n_notes = rawchange // denom
+               if n_notes >= 1:
+                   change_notes[denom] = n_notes
+                   rawchange = rawchange - n_notes * denom
+ 
+    return change_notes
 
-    return change
+#print(make_change(100,570))
+
+
+#P-1.34#A common punishment for school children is to write out a sentence multiple times. Write a Python stand-alone program that will write out the
+#following sentence one hundred times: “I will never spam my friends
+#again.” Your program should number each of the sentences and it should
+#make eight different random-looking typos.
+
+string_source = 'I will never spam my friends again.'
+def make_typos_repeat(n_times,n_typos,string_source):
+    for x in range(1,n_times+1):
+        charlist = list(string_source)
+        typos_made = []
+        typo_to_make = random.randint(0,1)
+        for x in range (0,n_typos):
+            newtypo = random
+            print(f"{x} {charlist}")
+
+
+
+make_typos_repeat(3,1,string_source)
