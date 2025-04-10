@@ -1,4 +1,6 @@
 import random
+from datetime import datetime, date
+
 
 # Write a short Python function, is multiple(n, m), that takes two integer
 # values and returns True if n is a multiple of m, that is, n = mi for some
@@ -453,32 +455,67 @@ def make_change(charge, given):
 # again.” Your program should number each of the sentences and it should
 # make eight different random-looking typos.
 
-string_source = 'A will never spam my friends again.'
+string_repeat = 'I will never spam my friends again.'
 
 
-def make_typo(x):
+def make_typo(x, verbose=False):
     if ord(x) in [65, 97]:
-        shift = random.randint(1,2)
+        shift = random.randint(1, 2)
     elif ord(x) in [90, 122]:
-        shift =  random.randint(-2,-1)
+        shift = random.randint(-2, -1)
     else:
-        shift =(random.sample([-1,1],1)[0])
-    z = chr(ord(x) + shift)   
-    #print(f"changed {x} {ord(x)} into {z} with a {shift} shift")    
+        shift = (random.sample([-1, 1], 1)[0])
+    z = chr(ord(x) + shift)
+    if verbose:
+        print(f"changed {x} {ord(x)} into {z} with a {shift} shift")
     return z
 
-def make_typos_repeat(n_times, n_typos, string_source):
+
+def make_typos_repeat(n_times, n_typos, string_source, verbose=False):
     for times in range(1, n_times+1):
         charlist = list(string_source)
-        az_indices = []
-        typos_made = []
-        for x in range(0,len(charlist)):
+        alphachar_indices = []
+        for x in range(0, len(charlist)):
             if charlist[x].isalpha():
-                az_indices.append(x)
-        random_elements = random.sample(az_indices, n_typos)
+                alphachar_indices.append(x)
+        random_elements = random.sample(alphachar_indices, n_typos)
         for x in random_elements:
             charlist[x] = make_typo(charlist[x])
-        print(f"{times} {''.join(charlist)}")
+        if verbose:
+            print(f"{times} {''.join(charlist)}")
 
 
-make_typos_repeat(30, 3, string_source)
+# make_typos_repeat(30, 3, string_repeat)
+
+
+# The birthday paradox says that the probability that two people in a room
+# will have the same birthday is more than half, provided n, the number of
+# people in the room, is more than 23. This property is not really a paradox,
+# but many people find it surprising. Design a Python program that can test
+# this paradox by a series of experiments on randomly generated birthdays,
+# which test this paradox for n = 5,10,15,20, . . . ,100.
+
+def generate_random_date(current_date):
+    while True:
+        random_day = random.randint(1, 31)
+        random_month = random.randint(1, 12)
+        random_year = random.randint(1950, 2010)
+        try:
+            rand_date = date(random_year, random_month, random_day)
+            return rand_date
+        except ValueError:
+            print(f"date error with {random_year}-{random_month}-{random_day}")
+            continue
+
+
+def birthday_paradox(n_people):
+    dayslist = []
+    current_date = datetime.now().date()
+    for x in range(1, n_people):
+        dayslist.append(generate_random_date(current_date))
+    all_dates = len(dayslist)
+    unique_dates = len(set(dayslist))
+    return all_dates, unique_dates
+
+
+print(birthday_paradox(150))
