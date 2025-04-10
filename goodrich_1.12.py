@@ -497,9 +497,10 @@ def make_typos_repeat(n_times, n_typos, string_source, verbose=False):
 
 def generate_random_date(current_date):
     while True:
+        year = current_date.year
         random_day = random.randint(1, 31)
         random_month = random.randint(1, 12)
-        random_year = random.randint(1950, 2010)
+        random_year = random.randint(1950, year)
         try:
             rand_date = date(random_year, random_month, random_day)
             return rand_date
@@ -508,14 +509,36 @@ def generate_random_date(current_date):
             continue
 
 
+def get_birthday_list(dates_list):
+    birthday_list = []
+    for x in dates_list:
+        birthday_list.append(x.strftime("%m-%d"))
+    return birthday_list
+
+
+def calc_stats_pairs(birthday_list):
+    datecounter = {}
+    for x in birthday_list:
+        if x in datecounter.keys():
+            datecounter[x] = datecounter[x] + 1
+        else:
+            datecounter[x] = 1
+
+    total_entries = len(birthday_list)
+    similar_date_pairs = 0
+    for count in datecounter.values():
+        if count > 1:
+            similar_date_pairs += (count * (count - 1)) / 2
+    return datecounter
+
+
 def birthday_paradox(n_people):
-    dayslist = []
+    dates_list = []
     current_date = datetime.now().date()
     for x in range(1, n_people):
-        dayslist.append(generate_random_date(current_date))
-    all_dates = len(dayslist)
-    unique_dates = len(set(dayslist))
-    return all_dates, unique_dates
+        dates_list.append(generate_random_date(current_date))
+    birtdays_list = get_birthday_list(dates_list)
+    return calc_stats_pairs(birtdays_list)
 
 
 print(birthday_paradox(150))
