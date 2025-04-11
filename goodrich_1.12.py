@@ -518,18 +518,20 @@ def get_birthday_list(dates_list):
 
 def calc_stats_pairs(birthday_list):
     datecounter = {}
+    count_pairs = 0
     for x in birthday_list:
         if x in datecounter.keys():
             datecounter[x] = datecounter[x] + 1
+            count_pairs = count_pairs + 1
         else:
             datecounter[x] = 1
 
-    total_entries = len(birthday_list)
-    similar_date_pairs = 0
-    for count in datecounter.values():
-        if count > 1:
-            similar_date_pairs += (count * (count - 1)) / 2
-    return datecounter
+    total_bdays = len(birthday_list)
+    # Calculate the probability of at least one pair for this group size
+    probability = count_pairs / total_bdays
+
+    # Store the probability in the dictionary
+    return probability, datecounter
 
 
 def birthday_paradox(n_people):
@@ -541,4 +543,4 @@ def birthday_paradox(n_people):
     return calc_stats_pairs(birtdays_list)
 
 
-print(birthday_paradox(150))
+print(birthday_paradox(720))
