@@ -544,3 +544,23 @@ def birthday_paradox(n_people):
 
 
 print(birthday_paradox(720))
+
+
+#Write a Python program that inputs a list of words, separated by whitespace,
+#and outputs how many times each word appears in the list. You
+#need not worry about efficiency at this point, however, as this topic is
+#something that will be addressed later in this book.
+
+str_of_words = 'rat cat fat rat cat sad bad'
+
+def count_words(list_whitespace):
+    words_list = str_of_words.split()
+    words_dict = {}
+    for word in words_list:
+        if word in words_dict.keys():
+            words_dict[word] = words_dict[word] + 1
+        else:
+             words_dict[word] = 1
+    return words_dict
+
+print(count_words(str_of_words))             
