@@ -141,11 +141,18 @@ class Vector:
     
 
     def __mul__(self,multiplier):
-        result = Vector(len(self))  # start with vector of zeros
-        for j in range(len(self)):
-            result[j] = self[j]* multiplier
-        return result
-
+        if isinstance(multiplier,int):
+            result = Vector(len(self))  # start with vector of zeros
+            for j in range(len(self)):
+                result[j] = self[j]* multiplier
+            return result    
+        elif isinstance(multiplier,Vector) & len(multiplier) == len(self) :
+            result = 0 
+            for j in range(len(self)):
+                result = result + self[j] * multiplier[j] 
+            return result
+        else:
+            raise TypeError("Multiplier must be either int or Vector")
     def __rmul__(self, multiplier):
         """Handle scalar * vector (delegates to __mul__)."""
         return self * multiplier  # Reuse __mul__ logic   
@@ -220,7 +227,7 @@ v1 = Vector(3)
 v1[0] = 1
 v1[1] = 3
 v1[2] = 4
-u = -v1  # Calls v.__neg__() implicitly
+u = v1  # Calls v.__neg__() implicitly
 print(u)  # Output: <-1, 2, -3>
 
 
@@ -233,4 +240,10 @@ print(u)  # Output: <-1, 2, -3>
 
 print(u+[12,22,32])
 print([12,22,32] + u)
-print(u*33)
+print(u*v1)
+
+
+#Implement the mul method for the Vector class of Section 2.3.3, so
+#that the expression u v returns a scalar that represents the dot product of
+#the vectors, that is, ∑d
+#i=1 ui · vi.
