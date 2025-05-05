@@ -265,3 +265,8 @@ print(u*v1)
 #Vector([4, 7, 5]) would produce a three-dimensional vector with coordinates <4, 7, 5>. Modify the constructor so that either of these forms is
 #acceptable; that is, if a single integer is sent, it produces a vector of that
 #dimension with all zeros, but if a sequence of numbers is provided, it produces a vector with coordinates based on that sequence.
+
+
+#R-2.16 Our Range class, from Section 2.3.5, relies on the formula
+#max(0, (stop − start + step − 1) // step)
+
