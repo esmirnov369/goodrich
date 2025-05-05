@@ -105,9 +105,17 @@ class CreditCard:
 class Vector:
     """Represent a vector in a multidimensional space."""
 
-    def __init__(self, d):
-        """Create d-dimensional vector of zeros."""
-        self.coords = [0] * d
+    def __init__(self, data):
+        if isinstance(data, int):
+            if data < 0:
+                raise ValueError("Dimension must be non-negative")
+            self.coords = [0.0] * data  # Create a list of zeros
+        elif isinstance(data, (list, tuple)):  # Accepts lists or tuples
+            if not all(isinstance(x, (int, float)) for x in data):
+                raise TypeError("All elements must be numbers (int/float)")
+            self.coords = [float(x) for x in data]  # Convert all to float
+        else:
+            raise TypeError("Input must be an int or a list/tuple of numbers")
 
     def __len__(self):
         """Return the dimension of the vector."""
@@ -146,7 +154,7 @@ class Vector:
             for j in range(len(self)):
                 result[j] = self[j]* multiplier
             return result    
-        elif isinstance(multiplier,Vector) & len(multiplier) == len(self) :
+        elif isinstance(multiplier,Vector) and len(multiplier) == len(self) :
             result = 0 
             for j in range(len(self)):
                 result = result + self[j] * multiplier[j] 
@@ -247,3 +255,13 @@ print(u*v1)
 #that the expression u v returns a scalar that represents the dot product of
 #the vectors, that is, ∑d
 #i=1 ui · vi.
+
+
+#The Vector class of Section 2.3.3 provides a constructor that takes an integer d, and produces a d-dimensional vector with all coordinates equal to
+#0. Another convenient form for creating a new vector would be to send the
+#constructor a parameter that is some iterable type representing a sequence
+#of numbers, and to create a vector with dimension equal to the length of
+#that sequence and coordinates equal to the sequence values. For example,
+#Vector([4, 7, 5]) would produce a three-dimensional vector with coordinates <4, 7, 5>. Modify the constructor so that either of these forms is
+#acceptable; that is, if a single integer is sent, it produces a vector of that
+#dimension with all zeros, but if a sequence of numbers is provided, it produces a vector with coordinates based on that sequence.
