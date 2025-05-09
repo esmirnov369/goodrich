@@ -270,3 +270,68 @@ print(u*v1)
 #R-2.16 Our Range class, from Section 2.3.5, relies on the formula
 #max(0, (stop − start + step − 1) // step)
 
+#R-2.18 Give a short fragment of Python code that uses the progression classes
+#from Section 2.4.2 to find the 8th value of a Fibonacci progression that
+#starts with 2 and 2 as its first two values.
+
+class Progression:
+    """Iterator producing a generic progression.
+
+    Default iterator produces the whole numbers 0, 1, 2, ...
+    """
+
+    def __init__(self, start=0):
+        """Initialize current to the first value of the progression."""
+        self.current = start
+
+    def advance(self):
+        """Update self.current to a new value.
+
+        This should be overridden by a subclass to customize progression.
+
+        By convention, if current is set to None, this designates the
+        end of a finite progression.
+        """
+        self.current += 1
+
+    def __next__(self):
+        """Return the next element, or else raise StopIteration error."""
+        if self.current is None:  # our convention to end a progression
+            raise StopIteration()
+        else:
+            answer = self.current  # record current value to return
+            self.advance()         # advance to prepare for next time
+            return answer          # return the answer
+
+    def __iter__(self):
+        """By convention, an iterator must return itself as an iterator."""
+        return self
+
+    def print_progression(self, n):
+        """Print next n values of the progression."""
+        print(' '.join(str(next(self)) for j in range(n)))
+
+class FibonacciProgression(Progression):
+    """Iterator producing a generalized Fibonacci progression."""
+
+    def __init__(self, first=0, second=1):
+        """Create a new fibonacci progression.
+
+        first  the first term of the progression (default 0)
+        second the second term of the progression (default 1)
+        """
+        super().__init__(first)  # start progression at first
+        self.prev = second - first  # fictitious value preceding the first
+
+    def advance(self):
+        """Update current value by taking sum of previous two."""
+        self.prev, self.current = self.current, self.prev + self.current
+
+
+mafibo = FibonacciProgression(2,2)
+mafibo.print_progression(8)
+
+
+#P-2.34 Write a Python program that inputs a document and then outputs a barchart
+#plot of the frequencies of each alphabet character that appears in
+#that document.
