@@ -100,7 +100,43 @@ class CreditCard:
             self.balance -= amount
         except TypeError:
             raise TypeError
+
+
+class PredatoryCreditCard(CreditCard):
+    def __init__(self, customer: str, bank: str, acnt: str, limit: float, 
+                 apr: float, balance: int | None = 0):
+        """Create a new predatory credit card instance.
         
+        Args:
+            customer: Name of the customer
+            bank: Name of the bank
+            acnt: Account identifier
+            limit: Credit limit (in dollars)
+            apr: Annual percentage rate (e.g., 0.0825 for 8.25% APR)
+            balance: Optional starting balance (defaults to 0)
+        """
+        super().__init__(customer, bank, acnt, limit, balance)  
+        self._apr = apr
+
+
+    def charge(self, price):
+        """Charge given price to the card, assuming sufficient credit limit.
+
+        Return True if charge was processed.
+        Return False and assess $5 fee if charge is denied.
+        """
+        success = super().charge(price)  # call inherited method
+        if not success:
+            self.balance += 5  # assess penalty
+        return success  # caller expects return value
+
+    def process_month(self):
+        """Assess monthly interest on outstanding balance."""
+        if self.balance > 0:
+            # if positive balance, convert APR to monthly multiplicative factor
+            monthly_factor = pow(1 + self._apr, 1/12)
+            self.balance *= monthly_factor
+
 
 class Vector:
     """Represent a vector in a multidimensional space."""
@@ -204,22 +240,24 @@ if __name__ == "__main__":
                  '3485 0399 3395 1954', 3500))
     wallet.append(CreditCard('Joe Doe', 'California Finance',
                  '5391 0375 9387 5309', 5000))
-
+    pCC = PredatoryCreditCard('Joe Creditdoe', 'California Pred Finance',
+                 '5391 0375 9387 5309', 5000,0.15)
+    wallet.append(pCC)
+    
     for val in range(1, 64):
         wallet[0].charge(val)
         wallet[1].charge(2 * val)
         wallet[2].charge(3 * val)
 
-    for c in range(3):
-        print('Customer =', wallet[c].get_customer())
-        print('Bank =', wallet[c].get_bank())
-        print('Account =', wallet[c].get_account())
-        print('Limit =', wallet[c].get_limit())
-        print('Balance =', wallet[c].get_balance())
-        #while wallet[c].get_balance() > 100:
-           # wallet[c].make_payment(100)
-            #print('New balance =', wallet[c].get_balance())
-        #print()
+    
+    pCC.charge(3000)
+    for x in range(12):
+        pCC.process_month()
+        print(f'Balance {x} {pCC.get_balance()}')
+
+
+   
+
 
 
 
@@ -335,3 +373,53 @@ mafibo.print_progression(8)
 #P-2.34 Write a Python program that inputs a document and then outputs a barchart
 #plot of the frequencies of each alphabet character that appears in
 #that document.
+
+def calc_symbols(content):
+    dict_of_symbols = {}
+    for item in content:
+        item = (item).lower()
+        if item in dict_of_symbols.keys():
+            dict_of_symbols[item] = dict_of_symbols[item] + 1
+        else:
+            dict_of_symbols[item] = 1
+    return dict_of_symbols    
+
+
+try:
+    with open('sample.txt', 'r') as file:
+        content = file.read()
+except FileNotFoundError:
+    print("File not found!")
+
+letters_numbers = calc_symbols(content)
+
+max_width = 40  # Max bar width
+
+max_count = max(letters_numbers.values())
+for key, value in sorted(letters_numbers.items()):
+    bar = '*' * int((value / max_count) * max_width)
+    #print(f"{key} | {bar} ({value})")
+
+
+#Write a Python program that inputs a polynomial in standard algebraic
+#notation and outputs the first derivative of that polynomial.
+polynomial = '3x^3+2x^2-1x^1'
+#polynomial = '-x^2 + 3x'
+#step 1 - get rid of spaces
+polynomial = polynomial.replace(" ", "")
+
+symbol_set = []
+members = []
+for ind in range(len(polynomial)):  
+    if ind == 0 or (polynomial[ind]  not in ('+', '-')):
+         if ind == 0 and polynomial[ind] not in('+', '-'):
+             symbol_set.append('+')
+         symbol_set.append(polynomial[ind])
+    elif ind > 0 and polynomial[ind] in ('+','-'):
+        members.append(''.join(symbol_set))
+        symbol_set = []
+        symbol_set.append(polynomial[ind])
+    if ind+1 == len(polynomial):
+        members.append(''.join(symbol_set))
+
+print(members)
