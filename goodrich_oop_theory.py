@@ -402,52 +402,62 @@ for key, value in sorted(letters_numbers.items()):
 
 
 
+def parse_polynomial_to_list(polynomial):
+    polynomial = polynomial.replace(" ", "")
+    symbol_set = []
+    members = []
+    print(f'we get the string like {polynomial}')
+    for ind in range(len(polynomial)):  
+        if ind == 0 or (polynomial[ind]  not in ('+', '-')):
+            if ind == 0 and polynomial[ind] not in('+', '-'):
+                symbol_set.append('+')
+            symbol_set.append(polynomial[ind])
+        elif ind > 0 and polynomial[ind] in ('+','-'):
+            members.append(''.join(symbol_set))
+            symbol_set = []
+            symbol_set.append(polynomial[ind])
+        if ind+1 == len(polynomial):
+            members.append(''.join(symbol_set))
+    print(members)
+    return members
 
 def get_polynomial_apart(list_of_members):
     list_of_dicts = []
     for data in list_of_members:
         dict_member = {}
+        dict_member['x'] = 'x'
         exponent_index = (data.find('^'))
         x_index = (data.find('x'))
-        if x_index != -1:
-            numberval =  data[0:x_index]
-        else:
-            numberval = data   
-        if exponent_index != -1:
-            exponent_value = data[exponent_index+1:]
-        elif exponent_index == -1:
-            if (data.find('x')) != -1:
-                exponent_value = 1     
-            else:
-                exponent_value = 0
+        #we have the x and some number before the x - let's take it
+        numberval =  data[0:x_index] 
+        exponent_value = data[exponent_index+1:]
         dict_member['exponent'] = float(exponent_value)
-        dict_member['x'] = 'x'
-        dict_member['number_val'] = float(numberval) if numberval not in('+', '-') else float(numberval+'1')
-
+        try:
+            dict_member['number_val'] = float(numberval)
+        except ValueError:
+             dict_member['number_val'] = 1 if numberval == '+' else -1     
         list_of_dicts.append(dict_member)
     return list_of_dicts    
 
+
+def get_derivative(list_of_dicts):
+    new_str = ''
+    for item in list_of_dicts:
+        mult = item['number_val'] * item['exponent']
+        new_exp =  item['exponent'] - 1
+        new_str = new_str + str(mult) + item['x'] + '^' + str(new_exp)
+    return new_str
+
 #Write a Python program that inputs a polynomial in standard algebraic
 #notation and outputs the first derivative of that polynomial.
-polynomial = '3x^3+2x^2-1x^1+x'
-#polynomial = '-x^2 + 3x'
-#step 1 - get rid of spaces
-polynomial = polynomial.replace(" ", "")
 
-symbol_set = []
-members = []
-print(f'we get the string like {polynomial}')
-for ind in range(len(polynomial)):  
-    if ind == 0 or (polynomial[ind]  not in ('+', '-')):
-         if ind == 0 and polynomial[ind] not in('+', '-'):
-             symbol_set.append('+')
-         symbol_set.append(polynomial[ind])
-    elif ind > 0 and polynomial[ind] in ('+','-'):
-        members.append(''.join(symbol_set))
-        symbol_set = []
-        symbol_set.append(polynomial[ind])
-    if ind+1 == len(polynomial):
-        members.append(''.join(symbol_set))
 
-llist = get_polynomial_apart(members)
-print(llist)
+
+inputs = '4x^5 - 3x^2 + 2x^1 + 6x^0'
+list_str = parse_polynomial_to_list(inputs)
+list_dicts = get_polynomial_apart(list_str)
+print(get_derivative(list_dicts))
+
+
+
+
