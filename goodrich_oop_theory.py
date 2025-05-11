@@ -471,7 +471,7 @@ def generate_random_name(length=6):
 
 # Generate an 6-symbol random name
 random_name = generate_random_name()
-print(random_name)
+
 
 
 class package_dealer():
@@ -487,8 +487,8 @@ class package_dealer():
     def deliver(self):
         for owned_package in self.owned_packages:
             for observer in self.observers:
-                if owned_package.to_address == observer.name:
-                    observer.receive(owned_package)
+                if owned_package.to_add == observer.name:
+                    observer.recieve_package(owned_package)
                     self.owned_packages.remove(owned_package)
 
     def check_and_queue(self):
@@ -499,7 +499,7 @@ class package_dealer():
                         self.owned_packages.append(delivery)
                         observer.outgoing_packages.remove(delivery)
         if len(self.owned_packages) > 0:
-            self.deliver(self)
+            self.deliver()
 
 
 class package():
@@ -529,9 +529,10 @@ class participant():
         new_package = package(self.name, to_addr)
         self.outgoing_packages.append(new_package)
 
-    def _recieve_pack(self, package):
+    def recieve_package(self, package):
         if package.status == 'new' and package.to_add == self.name:
             self.incoming_packages.append(package)
+            self.read_package()
 
     def read_package(self):
         for x in self.incoming_packages:
@@ -547,4 +548,5 @@ Internet.register_observer(Alice)
 
 Bob.prep_package('Alice')
 Bob.prep_package('Alice')
-Internet
+Internet.check_and_queue()
+print(Alice.archived_packages)
