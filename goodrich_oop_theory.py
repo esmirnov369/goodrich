@@ -401,15 +401,42 @@ for key, value in sorted(letters_numbers.items()):
     #print(f"{key} | {bar} ({value})")
 
 
+
+
+def get_polynomial_apart(list_of_members):
+    list_of_dicts = []
+    for data in list_of_members:
+        dict_member = {}
+        exponent_index = (data.find('^'))
+        x_index = (data.find('x'))
+        if x_index != -1:
+            numberval =  data[0:x_index]
+        else:
+            numberval = data   
+        if exponent_index != -1:
+            exponent_value = data[exponent_index+1:]
+        elif exponent_index == -1:
+            if (data.find('x')) != -1:
+                exponent_value = 1     
+            else:
+                exponent_value = 0
+        dict_member['exponent'] = float(exponent_value)
+        dict_member['x'] = 'x'
+        dict_member['number_val'] = float(numberval) if numberval not in('+', '-') else float(numberval+'1')
+
+        list_of_dicts.append(dict_member)
+    return list_of_dicts    
+
 #Write a Python program that inputs a polynomial in standard algebraic
 #notation and outputs the first derivative of that polynomial.
-polynomial = '3x^3+2x^2-1x^1'
+polynomial = '3x^3+2x^2-1x^1+x'
 #polynomial = '-x^2 + 3x'
 #step 1 - get rid of spaces
 polynomial = polynomial.replace(" ", "")
 
 symbol_set = []
 members = []
+print(f'we get the string like {polynomial}')
 for ind in range(len(polynomial)):  
     if ind == 0 or (polynomial[ind]  not in ('+', '-')):
          if ind == 0 and polynomial[ind] not in('+', '-'):
@@ -422,4 +449,5 @@ for ind in range(len(polynomial)):
     if ind+1 == len(polynomial):
         members.append(''.join(symbol_set))
 
-print(members)
+llist = get_polynomial_apart(members)
+print(llist)
