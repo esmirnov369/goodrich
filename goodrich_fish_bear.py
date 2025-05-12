@@ -41,9 +41,9 @@ class River(Ecosystem):
         # Specify applicable animals for River
         self.applicable_animals = [Bear, Fish, None]
 
-    def fluctuatate(self):
+    def fluctuate(self):
         for animal in self.ecosystem_contents:
-            animal.behave()
+            if animal != None: animal.behave()
 
 
 class Animal(ABC):
@@ -58,10 +58,10 @@ class Animal(ABC):
 class Bear(Animal):
 
     def behave(self):
-        self.set_move(random.choice([0, 1, -1]))
+        self.move_value = random.choice([0, 1, -1])
 
     def set_move(self, value):
-        self.move = value
+        self.move_value = value
 
 
 class Fish(Animal):
@@ -73,16 +73,36 @@ class Fish(Animal):
         self.move_value = value
 
 
-class animal_dispatcher(self, Ecosystem):
+class animal_dispatcher():
 
     def __init__(self, Ecosystem):
         self.queue = Ecosystem.ecosystem_contents
+        self.slotted_queue = []
 
     def resolve_moves(self):
+        self.slotted_queue =  [[item] for item in self.queue]
         for addr in range(len(self.queue)):
-            if self.queue[addr] is not None and self.queue[addr].move in (1, -1):
-                print(
-                    f'{self.queue[addr]} needs to move by {self.queue[addr].move}')
+            if self.queue[addr] is not None and self.queue[addr].move_value in (1, -1):
+
+                current_item = self.queue[addr]
+                move = current_item.move_value
+
+                # Calculate target index
+                target_index = addr + move
+
+                # Check if target index is valid
+                if 0 <= target_index < len(self.slotted_queue):
+                # Remove from current position (replace with None)
+                    if self.slotted_queue[addr] and self.slotted_queue[addr][0] == current_item:
+                        self.slotted_queue[addr] = [None]
+
+                # Add to target position (append to existing sublist)
+                if self.slotted_queue[target_index][0] is None:
+                    self.slotted_queue[target_index] = [current_item]
+                else:
+                    self.slotted_queue[target_index].append(current_item)
+
+        print(self.slotted_queue)
 
     def process_collisions(self):
         pass
@@ -92,6 +112,6 @@ Volga = River(10)
 print(Volga)
 Volga.populate_ecosystem()
 flow = animal_dispatcher(Volga)
-Volga.fluctuatate()
+Volga.fluctuate()
 flow.resolve_moves()
 print(Volga)
