@@ -58,7 +58,7 @@ class Animal(ABC):
 class Bear(Animal):
 
     def behave(self):
-        self.move = random.choice([0, 1, -1])
+        self.set_move(random.choice([0, 1, -1]))
 
     def set_move(self, value):
         self.move = value
@@ -67,25 +67,31 @@ class Bear(Animal):
 class Fish(Animal):
 
     def behave(self):
-        self.move = random.choice([0, 1, -1])
+        self.move_value = random.choice([0, 1, -1])
 
     def set_move(self, value):
-        self.move = value
+        self.move_value = value
 
 
-class animal_dispatcher(self, Ecosystem)
+class animal_dispatcher(self, Ecosystem):
 
+    def __init__(self, Ecosystem):
+        self.queue = Ecosystem.ecosystem_contents
 
-def __init__(self, Ecosystem):
-    self.queue = Ecosystem.ecosystem_contents
+    def resolve_moves(self):
+        for addr in range(len(self.queue)):
+            if self.queue[addr] is not None and self.queue[addr].move in (1, -1):
+                print(
+                    f'{self.queue[addr]} needs to move by {self.queue[addr].move}')
 
-    def resolve_movies(self):
-        for item in self.queue:
+    def process_collisions(self):
+        pass
 
 
 Volga = River(10)
 print(Volga)
 Volga.populate_ecosystem()
 flow = animal_dispatcher(Volga)
-
+Volga.fluctuatate()
+flow.resolve_moves()
 print(Volga)
