@@ -473,7 +473,6 @@ def generate_random_name(length=6):
 random_name = generate_random_name()
 
 
-
 class package_dealer():
     def __init__(self, name):
         self.observers = []
