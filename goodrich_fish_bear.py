@@ -13,10 +13,13 @@ from abc import ABC, abstractmethod
 
 
 class Ecosystem():
-    def __init__(self, size):
+    def __init__(self, size, applicable_animals=None):
         self.size = size
         self.ecosystem_contents = [None] * size
-        self.applicable_animals = []
+        self.applicable_animals = applicable_animals or []
+        self.populate_ecosystem()
+
+
 
     def populate_ecosystem(self):
         if not self.applicable_animals:
@@ -32,28 +35,31 @@ class Ecosystem():
                     self.ecosystem_contents[i] = None
 
     def __str__(self):
-        return f"Ecosystem with size {self.size} and applicable animals: {self.applicable_animals} and contents like {self.ecosystem_contents}"
-
+        return f"Ecosystem  {self.size} and applicable animals: {self.applicable_animals} and contents like {self.ecosystem_contents}\n"
 
 class River(Ecosystem):
     def __init__(self, size):
-        super().__init__(size)  # Call the constructor of the superclass
-        # Specify applicable animals for River
-        self.applicable_animals = [Bear, Fish, None]
+        super().__init__(size, [Bear, Fish, None])  # Pass animals directly
 
     def fluctuate(self):
+        print(f'behold, fluctuation!')
         for animal in self.ecosystem_contents:
             if animal != None: animal.behave()
 
 
 class Animal(ABC):
     def __init__(self):
-        pass
+        self.id = id(self) % 10000
 
     @abstractmethod
     def behave(self):
         pass
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}#{self.id}"  # Used in lists, debugging
+
+    def __str__(self):
+        return f"{self.__class__.__name__}#{self.id})"  # User-friendly print
 
 class Bear(Animal):
 
@@ -80,28 +86,25 @@ class animal_dispatcher():
         self.slotted_queue = []
 
     def resolve_moves(self):
-        self.slotted_queue =  [[item] for item in self.queue]
+        self.slotted_queue =  [[] for _ in self.queue]
+        #loop over original list and not touch it even
         for addr in range(len(self.queue)):
-            if self.queue[addr] is not None and self.queue[addr].move_value in (1, -1):
+            if self.queue[addr] is not None:
 
                 current_item = self.queue[addr]
                 move = current_item.move_value
 
                 # Calculate target index
                 target_index = addr + move
-
-                # Check if target index is valid
-                if 0 <= target_index < len(self.slotted_queue):
-                # Remove from current position (replace with None)
-                    if self.slotted_queue[addr] and self.slotted_queue[addr][0] == current_item:
-                        self.slotted_queue[addr] = [None]
-
+                if target_index < 0: target_index = 0
+                if target_index >= len(self.queue): target_index = len(self.queue)-1 
+                # Check if target index is valnot at corners  
                 # Add to target position (append to existing sublist)
-                if self.slotted_queue[target_index][0] is None:
+                if len(self.slotted_queue[target_index]) == 0:
                     self.slotted_queue[target_index] = [current_item]
                 else:
                     self.slotted_queue[target_index].append(current_item)
-
+        
         print(self.slotted_queue)
 
     def process_collisions(self):
@@ -110,8 +113,7 @@ class animal_dispatcher():
 
 Volga = River(10)
 print(Volga)
-Volga.populate_ecosystem()
 flow = animal_dispatcher(Volga)
 Volga.fluctuate()
 flow.resolve_moves()
-print(Volga)
+
