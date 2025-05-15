@@ -1,5 +1,7 @@
 import random
 from abc import ABC, abstractmethod
+
+
 # Write a Python program to simulate an ecosystem containing two types
 # of creatures, bears and fish. The ecosystem consists of a river, which is
 # modeled as a relatively large list. Each element of the list should be a
@@ -12,7 +14,17 @@ from abc import ABC, abstractmethod
 # fish dies (i.e., it disappears).
 
 
+
+
+
+
+
+
+
+
 class Ecosystem():
+    _test_mode = False
+    _forced_choices = []
     def __init__(self, size, applicable_animals=None):
         self.size = size
         self.ecosystem_contents = [None] * size
@@ -27,7 +39,10 @@ class Ecosystem():
             return
         else:
             for i in range(self.size):
-                tenant = random.choice(self.applicable_animals)
+                if self._test_mode == False:
+                    tenant = random.choice(self.applicable_animals)
+                else:
+                    tenant = self._forced_choices[i]    
                 if tenant is not None:
                     # Instantiate the chosen animal class with a name
                     self.ecosystem_contents[i] = tenant()
@@ -48,35 +63,47 @@ class River(Ecosystem):
 
 
 class Animal(ABC):
+    _test_mode = False
+    _forced_move = None
+    
     def __init__(self):
         self.id = id(self) % 10000
+        self.move_value = 0  # Initialize move value
 
     @abstractmethod
     def behave(self):
+        """Child classes must implement this, but can use self._determine_move()"""
         pass
-
-    def __repr__(self):
-        return f"{self.__class__.__name__}#{self.id}"  # Used in lists, debugging
-
-    def __str__(self):
-        return f"{self.__class__.__name__}#{self.id})"  # User-friendly print
-
-class Bear(Animal):
-
-    def behave(self):
-        self.move_value = random.choice([0, 1, -1])
+        
+    def _determine_move(self):
+        """Encapsulated movement logic that all animals can reuse"""
+        if self._test_mode and self._forced_move is not None:
+            return self._forced_move
+        return random.choice([-1, 0, 1])
 
     def set_move(self, value):
+        """Optional setter if you need explicit control"""
         self.move_value = value
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}#{self.id}"
+
+    def __str__(self):
+        return f"{self.__class__.__name__}#{self.id}"
+
+
+class Bear(Animal):
+    def behave(self):
+        """Bear-specific behavior that uses the shared movement logic"""
+        self.move_value = self._determine_move()
+        # Could add bear-specific behavior here
 
 
 class Fish(Animal):
-
     def behave(self):
-        self.move_value = random.choice([0, 1, -1])
-
-    def set_move(self, value):
-        self.move_value = value
+        """Fish-specific behavior that uses the shared movement logic"""
+        self.move_value = self._determine_move()
+        # Could add fish-specific behavior here
 
 
 class animal_dispatcher():
@@ -110,10 +137,17 @@ class animal_dispatcher():
     def process_collisions(self):
         pass
 
+Ecosystem._test_mode = True
+Ecosystem._forced_choices = [Bear, Fish, None]  # Force ecosystem population
+Animal._test_mode = True
 
-Volga = River(10)
-print(Volga)
+
+
+Volga = River(3)  # Size 6 to match mock lengths
+print(Volga)  # Check population (Bear, Fish, None, Bear, Fish, None)
+
 flow = animal_dispatcher(Volga)
-Volga.fluctuate()
-flow.resolve_moves()
+Volga.fluctuate()  # Calls behave(), which now uses mocked moves [1, -1, 0, 1, -1, 0]
+flow.resolve_moves()  # Process collisions based on mocked moves
+
 
