@@ -14,24 +14,15 @@ from abc import ABC, abstractmethod
 # fish dies (i.e., it disappears).
 
 
-
-
-
-
-
-
-
-
 class Ecosystem():
     _test_mode = False
     _forced_choices = []
+
     def __init__(self, size, applicable_animals=None):
         self.size = size
         self.ecosystem_contents = [None] * size
         self.applicable_animals = applicable_animals or []
         self.populate_ecosystem()
-
-
 
     def populate_ecosystem(self):
         if not self.applicable_animals:
@@ -39,10 +30,10 @@ class Ecosystem():
             return
         else:
             for i in range(self.size):
-                if self._test_mode == False:
+                if self._test_mode is False:
                     tenant = random.choice(self.applicable_animals)
                 else:
-                    tenant = self._forced_choices[i]    
+                    tenant = self._forced_choices[i]
                 if tenant is not None:
                     # Instantiate the chosen animal class with a name
                     self.ecosystem_contents[i] = tenant()
@@ -52,6 +43,7 @@ class Ecosystem():
     def __str__(self):
         return f"Ecosystem  {self.size} and applicable animals: {self.applicable_animals} and contents like {self.ecosystem_contents}\n"
 
+
 class River(Ecosystem):
     def __init__(self, size):
         super().__init__(size, [Bear, Fish, None])  # Pass animals directly
@@ -59,31 +51,22 @@ class River(Ecosystem):
     def fluctuate(self):
         print(f'behold, fluctuation!')
         for animal in self.ecosystem_contents:
-            if animal != None: animal.behave()
+            if animal != None:
+                animal.behave()
 
 
 class Animal(ABC):
-    _test_mode = False
-    _forced_move = None
-    
+
     def __init__(self):
         self.id = id(self) % 10000
-        self.move_value = 0  # Initialize move value
 
     @abstractmethod
     def behave(self):
-        """Child classes must implement this, but can use self._determine_move()"""
-        pass
-        
-    def _determine_move(self):
-        """Encapsulated movement logic that all animals can reuse"""
-        if self._test_mode and self._forced_move is not None:
-            return self._forced_move
-        return random.choice([-1, 0, 1])
+        return self._instance_specific_move()
 
-    def set_move(self, value):
-        """Optional setter if you need explicit control"""
-        self.move_value = value
+    def _instance_specific_move(self):
+        """Instance-specific movement logic"""
+        raise NotImplementedError("Subclasses must implement this method")
 
     def __repr__(self):
         return f"{self.__class__.__name__}#{self.id}"
@@ -93,28 +76,36 @@ class Animal(ABC):
 
 
 class Bear(Animal):
+    def _instance_specific_move(self):
+        move = random.choice([-1, 0, 1])
+        return move
+
     def behave(self):
         """Bear-specific behavior that uses the shared movement logic"""
-        self.move_value = self._determine_move()
+        self.move_value = self._instance_specific_move()
         # Could add bear-specific behavior here
 
 
 class Fish(Animal):
+    def _instance_specific_move(self):
+        move = random.choice([-1, 0, 1])
+        return move
+
     def behave(self):
         """Fish-specific behavior that uses the shared movement logic"""
-        self.move_value = self._determine_move()
+        self.move_value = self._instance_specific_move()
         # Could add fish-specific behavior here
 
 
-class animal_dispatcher():
+class AnimalDispatcher():
 
     def __init__(self, Ecosystem):
         self.queue = Ecosystem.ecosystem_contents
         self.slotted_queue = []
 
     def resolve_moves(self):
-        self.slotted_queue =  [[] for _ in self.queue]
-        #loop over original list and not touch it even
+        self.slotted_queue = [[] for _ in self.queue]
+        # loop over original list and not touch it even
         for addr in range(len(self.queue)):
             if self.queue[addr] is not None:
 
@@ -123,31 +114,31 @@ class animal_dispatcher():
 
                 # Calculate target index
                 target_index = addr + move
-                if target_index < 0: target_index = 0
-                if target_index >= len(self.queue): target_index = len(self.queue)-1 
-                # Check if target index is valnot at corners  
+                if target_index < 0:
+                    target_index = 0
+                if target_index >= len(self.queue):
+                    target_index = len(self.queue)-1
+                # Check if target index is valnot at corners
                 # Add to target position (append to existing sublist)
                 if len(self.slotted_queue[target_index]) == 0:
                     self.slotted_queue[target_index] = [current_item]
                 else:
                     self.slotted_queue[target_index].append(current_item)
-        
+
         print(self.slotted_queue)
 
     def process_collisions(self):
         pass
 
+
 Ecosystem._test_mode = True
-Ecosystem._forced_choices = [Bear, Fish, None]  # Force ecosystem population
-Animal._test_mode = True
+# Force ecosystem population
+Ecosystem._forced_choices = [Bear, Fish, Bear, Fish, None]
 
 
-
-Volga = River(3)  # Size 6 to match mock lengths
+Volga = River(5)  # Size 6 to match mock lengths
 print(Volga)  # Check population (Bear, Fish, None, Bear, Fish, None)
 
-flow = animal_dispatcher(Volga)
-Volga.fluctuate()  # Calls behave(), which now uses mocked moves [1, -1, 0, 1, -1, 0]
+flow = AnimalDispatcher(Volga)
+Volga.fluctuate()
 flow.resolve_moves()  # Process collisions based on mocked moves
-
-
