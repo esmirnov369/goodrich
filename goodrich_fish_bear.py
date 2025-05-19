@@ -157,7 +157,8 @@ class AnimalDispatcher():
         for slot in self.queue:
             if slot != None and len(slot) > 1:
                 for animal in slot:
-                    print_debug_info(f"Collision! {animal}")
+                    print_debug_info(f"Collision! {type(animal)}")
+                if type(slot[0]) == type(slot[1]):            
         pass
 
 
