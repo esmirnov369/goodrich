@@ -12,6 +12,13 @@ from abc import ABC, abstractmethod
 # of that type of animal, which is placed in a random empty (i.e., previously
 # None) location in the list. If a bear and a fish collide, however, then the
 # fish dies (i.e., it disappears).
+DEBUG_MODE = True
+
+
+def print_debug_info(message):
+    """Print message if DEBUG_MODE is True."""
+    if DEBUG_MODE:
+        print(f"DEBUG: {message}")
 
 
 class Ecosystem():
@@ -22,11 +29,13 @@ class Ecosystem():
         self.size = size
         self.ecosystem_contents = [None] * size
         self.applicable_animals = applicable_animals or []
+        self.statehistory = []
         self.populate_ecosystem()
 
     def populate_ecosystem(self):
         if not self.applicable_animals:
-            print("No applicable animals to populate the ecosystem.")
+            print_debug_info(
+                "No applicable animals to populate the ecosystem.")
             return
         else:
             for i in range(self.size):
@@ -49,10 +58,22 @@ class River(Ecosystem):
         super().__init__(size, [Bear, Fish, None])  # Pass animals directly
 
     def fluctuate(self):
-        print(f'behold, fluctuation!')
+        print_debug_info('behold, fluctuation!')
         for animal in self.ecosystem_contents:
-            if animal != None:
+            if animal is not None:
                 animal.behave()
+
+    def fill_empty_slots(self):
+        for i in range(self.size):
+            if self.ecosystem_contents[i] == []:
+                self.ecosystem_contents[i] = None
+
+    def set_contents_from_external(self, new_list):
+        if len(self.ecosystem_contents) == len(new_list):
+            self.statehistory.append(self.ecosystem_contents)
+            self.ecosystem_contents = new_list
+            self.fill_empty_slots()
+        pass
 
 
 class Animal(ABC):
@@ -83,6 +104,7 @@ class Bear(Animal):
     def behave(self):
         """Bear-specific behavior that uses the shared movement logic"""
         self.move_value = self._instance_specific_move()
+        print_debug_info(self.move_value)
         # Could add bear-specific behavior here
 
 
@@ -94,16 +116,18 @@ class Fish(Animal):
     def behave(self):
         """Fish-specific behavior that uses the shared movement logic"""
         self.move_value = self._instance_specific_move()
+        print_debug_info(self.move_value)
         # Could add fish-specific behavior here
 
 
 class AnimalDispatcher():
 
-    def __init__(self, Ecosystem):
-        self.queue = Ecosystem.ecosystem_contents
+    def __init__(self):
+        self.queue = []
         self.slotted_queue = []
 
-    def resolve_moves(self):
+    def resolve_moves(self, ecosystem_instance):
+        self.queue = ecosystem_instance.ecosystem_contents
         self.slotted_queue = [[] for _ in self.queue]
         # loop over original list and not touch it even
         for addr in range(len(self.queue)):
@@ -125,9 +149,15 @@ class AnimalDispatcher():
                 else:
                     self.slotted_queue[target_index].append(current_item)
 
-        print(self.slotted_queue)
+        print_debug_info(self.slotted_queue)
+        return self.slotted_queue
 
-    def process_collisions(self):
+    def process_collisions(self, ecosystem_instance):
+        self.queue = ecosystem_instance.ecosystem_contents
+        for slot in self.queue:
+            if slot != None and len(slot) > 1:
+                for animal in slot:
+                    print_debug_info(f"Collision! {animal}")
         pass
 
 
@@ -137,8 +167,12 @@ Ecosystem._forced_choices = [Bear, Fish, Bear, Fish, None]
 
 
 Volga = River(5)  # Size 6 to match mock lengths
-print(Volga)  # Check population (Bear, Fish, None, Bear, Fish, None)
+# Check population (Bear, Fish, None, Bear, Fish, None)
+print_debug_info(Volga)
 
-flow = AnimalDispatcher(Volga)
+flow = AnimalDispatcher()
 Volga.fluctuate()
-flow.resolve_moves()  # Process collisions based on mocked moves
+
+Volga.set_contents_from_external(flow.resolve_moves(Volga))
+flow.process_collisions(Volga)
+print_debug_info(Volga)
