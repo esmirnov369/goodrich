@@ -80,6 +80,7 @@ class Animal(ABC):
 
     def __init__(self):
         self.id = id(self) % 10000
+        self.gender = random.choice(['male', 'female'])
 
     @abstractmethod
     def behave(self):
@@ -88,6 +89,14 @@ class Animal(ABC):
     def _instance_specific_move(self):
         """Instance-specific movement logic"""
         raise NotImplementedError("Subclasses must implement this method")
+
+    @abstractmethod
+    def mate(self, other):
+        pass
+
+    @abstractmethod
+    def fight(self, other):
+        pass
 
     def __repr__(self):
         return f"{self.__class__.__name__}#{self.id}"
@@ -106,6 +115,14 @@ class Bear(Animal):
         self.move_value = self._instance_specific_move()
         print_debug_info(self.move_value)
         # Could add bear-specific behavior here
+
+    def mate(self, other):
+        if type(self) == type(other):
+            if self.gender != other.gender:
+                child = Bear()
+
+    def fight(self, other):
+        pass
 
 
 class Fish(Animal):
@@ -158,7 +175,8 @@ class AnimalDispatcher():
             if slot != None and len(slot) > 1:
                 for animal in slot:
                     print_debug_info(f"Collision! {type(animal)}")
-                if type(slot[0]) == type(slot[1]):            
+                if type(slot[0]) == type(slot[1]):
+
         pass
 
 
