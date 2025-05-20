@@ -78,10 +78,11 @@ class River(Ecosystem):
 
 class Animal(ABC):
 
-    def __init__(self):
+    def __init__(self, min_health=1, max_health=10):
         self.id = id(self) % 10000
         self.gender = random.choice(['male', 'female'])
-
+        self.health = random.randint(min_health, max_health)
+        self.state = 0
     @abstractmethod
     def behave(self):
         return self._instance_specific_move()
@@ -98,6 +99,9 @@ class Animal(ABC):
     def fight(self, other):
         pass
 
+    def set_state(self,value):
+        self.state = value
+
     def __repr__(self):
         return f"{self.__class__.__name__}#{self.id}"
 
@@ -106,6 +110,10 @@ class Animal(ABC):
 
 
 class Bear(Animal):
+
+    def __init__(self):
+        super().__init__(min_health=5, max_health=15)
+
     def _instance_specific_move(self):
         move = random.choice([-1, 0, 1])
         return move
@@ -116,16 +124,26 @@ class Bear(Animal):
         print_debug_info(self.move_value)
         # Could add bear-specific behavior here
 
-    def mate(self, other):
-        if type(self) == type(other):
-            if self.gender != other.gender:
+    def mate(self, other_animal):
+        if type(self) == type(other_animal):
+            if self.gender != other_animal.gender:
                 child = Bear()
+                self.set_state(1)
+                other_animal.set_state(1)
+                return child    
 
     def fight(self, other):
-        pass
+         if (type(self) != type(other)) or (self.gender == other.gender):
+            if self.state != 1 and other.state != 1:
+                if self.health > other.health:
+                    #die
 
 
 class Fish(Animal):
+
+    def __init__(self):
+        super().__init__(min_health=1, max_health=5)
+
     def _instance_specific_move(self):
         move = random.choice([-1, 0, 1])
         return move
@@ -175,10 +193,12 @@ class AnimalDispatcher():
             if slot != None and len(slot) > 1:
                 for animal in slot:
                     print_debug_info(f"Collision! {type(animal)}")
-                if type(slot[0]) == type(slot[1]):
+                    
 
         pass
 
+    def find_slot_for_baby(self,ecosystem_instance):
+        pass
 
 Ecosystem._test_mode = True
 # Force ecosystem population
