@@ -112,6 +112,14 @@ class Animal(ABC):
 
 class Vertebrate(Animal):
 
+    def resolve_collision(self, other_animal):
+        product = self.mate(other_animal)
+        if product is None:
+            product = self.fight(other_animal)
+
+        if type(product) is type(self):
+            if find_slot_for_baby(())
+
     def mate(self, other_animal):
         if type(self) is type(other_animal):
             if self.gender != other_animal.gender:
@@ -122,17 +130,19 @@ class Vertebrate(Animal):
                 other_animal.set_state(1)
 
                 return child
+            else:
+                return None
 
-    def fight(self, other):
-        if (type(self) is not type(other)) or (self.gender == other.gender):
-            if self.state != 1 and other.state != 1:
-                if self.health > other.health:
-                    other.set_state(-1)
+    def fight(self, other_animal):
+        if (type(self) is not type(other_animal)) or (self.gender == other_animal.gender):
+            if self.state != 1 and other_animal.state != 1:
+                if self.health > other_animal.health:
+                    other_animal.set_state(-1)
                     self.set_state(1)
                 else:
-                    other.set_state(1)
+                    other_animal.set_state(1)
                     self.set_state(-1)
-        pass
+        return None
 
 
 class Bear(Vertebrate):
@@ -203,17 +213,19 @@ class AnimalDispatcher():
         self.queue = ecosystem_instance.ecosystem_contents
         for slot in self.queue:
             if slot != None and len(slot) > 1:
-                for animal in slot:
-                    print_debug_info(f"Collision! {type(animal)}")
-
+                animal_one = slot[0]
+                animal_two = slot[1]
+                animal_one.fight(animal_two)
+                animal_one.mate(animal_two)
         pass
 
-    def find_slot_for_baby(self, ecosystem_instance, baby_vertebrate_instance):
+    def find_slot_for_baby(self, ecosystem_instance):
         self.queue = ecosystem_instance.ecosystem_contents
-        for slot in self.queue:
-            if len(slot) == 0:
+        for index in range(len(self.queue)):
+            if len(self.queue) == 0:
+                return index
 
-    def process_dead(self.ecosystem_instance)
+    def process_dead(self.ecosystem_instance):
 
 
 Ecosystem._test_mode = True
