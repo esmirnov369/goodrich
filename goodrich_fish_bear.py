@@ -83,6 +83,7 @@ class Animal(ABC):
         self.gender = random.choice(['male', 'female'])
         self.health = random.randint(min_health, max_health)
         self.state = 0
+
     @abstractmethod
     def behave(self):
         return self._instance_specific_move()
@@ -92,14 +93,14 @@ class Animal(ABC):
         raise NotImplementedError("Subclasses must implement this method")
 
     @abstractmethod
-    def mate(self, other):
+    def mate(self, other_animal):
         pass
 
     @abstractmethod
-    def fight(self, other):
+    def fight(self, other_animal):
         pass
 
-    def set_state(self,value):
+    def set_state(self, value):
         self.state = value
 
     def __repr__(self):
@@ -109,7 +110,32 @@ class Animal(ABC):
         return f"{self.__class__.__name__}#{self.id}"
 
 
-class Bear(Animal):
+class Vertebrate(Animal):
+
+    def mate(self, other_animal):
+        if type(self) is type(other_animal):
+            if self.gender != other_animal.gender:
+                child = type(self)()
+
+                child.set_state(1)
+                self.set_state(1)
+                other_animal.set_state(1)
+
+                return child
+
+    def fight(self, other):
+        if (type(self) is not type(other)) or (self.gender == other.gender):
+            if self.state != 1 and other.state != 1:
+                if self.health > other.health:
+                    other.set_state(-1)
+                    self.set_state(1)
+                else:
+                    other.set_state(1)
+                    self.set_state(-1)
+        pass
+
+
+class Bear(Vertebrate):
 
     def __init__(self):
         super().__init__(min_health=5, max_health=15)
@@ -124,26 +150,8 @@ class Bear(Animal):
         print_debug_info(self.move_value)
         # Could add bear-specific behavior here
 
-    def mate(self, other_animal):
-        if type(self) == type(other_animal):
-            if self.gender != other_animal.gender:
-                child = Bear()
-                self.set_state(1)
-                other_animal.set_state(1)
-                return child    
 
-    def fight(self, other):
-         if (type(self) != type(other)) or (self.gender == other.gender):
-            if self.state != 1 and other.state != 1:
-                if self.health > other.health:
-                    other.set_state(-1)
-                    self.set_state(1)
-                else:
-                    other.set_state(1)
-                    self.set_state(-1)   
-
-
-class Fish(Animal):яч
+class Fish(Vertebrate):
 
     def __init__(self):
         super().__init__(min_health=1, max_health=5)
@@ -197,12 +205,16 @@ class AnimalDispatcher():
             if slot != None and len(slot) > 1:
                 for animal in slot:
                     print_debug_info(f"Collision! {type(animal)}")
-                    
 
         pass
 
-    def find_slot_for_baby(self,ecosystem_instance):
-        pass
+    def find_slot_for_baby(self, ecosystem_instance, baby_vertebrate_instance):
+        self.queue = ecosystem_instance.ecosystem_contents
+        for slot in self.queue:
+            if len(slot) == 0:
+
+    def process_dead(self.ecosystem_instance)
+
 
 Ecosystem._test_mode = True
 # Force ecosystem population
