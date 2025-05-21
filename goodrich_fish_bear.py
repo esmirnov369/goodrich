@@ -136,10 +136,14 @@ class Bear(Animal):
          if (type(self) != type(other)) or (self.gender == other.gender):
             if self.state != 1 and other.state != 1:
                 if self.health > other.health:
-                    #die
+                    other.set_state(-1)
+                    self.set_state(1)
+                else:
+                    other.set_state(1)
+                    self.set_state(-1)   
 
 
-class Fish(Animal):
+class Fish(Animal):яч
 
     def __init__(self):
         super().__init__(min_health=1, max_health=5)
