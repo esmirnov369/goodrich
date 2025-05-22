@@ -112,24 +112,20 @@ class Animal(ABC):
 
 class Vertebrate(Animal):
 
-    def resolve_collision(self, other_animal):
+    def conflict(self, other_animal):
         product = self.mate(other_animal)
         if product is None:
             product = self.fight(other_animal)
-
-        if type(product) is type(self):
-            if find_slot_for_baby(())
+            
 
     def mate(self, other_animal):
         if type(self) is type(other_animal):
             if self.gender != other_animal.gender:
                 child = type(self)()
-
                 child.set_state(1)
                 self.set_state(1)
                 other_animal.set_state(1)
-
-                return child
+                child.settle_newborn()
             else:
                 return None
 
@@ -144,6 +140,8 @@ class Vertebrate(Animal):
                     self.set_state(-1)
         return None
 
+    def settle_newborn(self):
+        
 
 class Bear(Vertebrate):
 
@@ -215,17 +213,17 @@ class AnimalDispatcher():
             if slot != None and len(slot) > 1:
                 animal_one = slot[0]
                 animal_two = slot[1]
-                animal_one.fight(animal_two)
-                animal_one.mate(animal_two)
+                animal_one.conflict(animal_two)
         pass
 
-    def find_slot_for_baby(self, ecosystem_instance):
+    def find_slot_for_child(self, ecosystem_instance):
         self.queue = ecosystem_instance.ecosystem_contents
         for index in range(len(self.queue)):
             if len(self.queue) == 0:
                 return index
 
-    def process_dead(self.ecosystem_instance):
+    def process_status(self,ecosystem_instance):
+        pass
 
 
 Ecosystem._test_mode = True
