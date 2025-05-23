@@ -29,9 +29,10 @@ class Animal {
     __init__()
 }
 class Vertebrate {
-    resolve_collision()
+    conflict()
     mate()
     fight()
+    settle_newborn()
         __init__()
 }
 class Bear {
@@ -49,8 +50,8 @@ class Fish {
 class AnimalDispatcher {
     resolve_moves()
     process_collisions()
-    find_slot_for_baby()
-    process_dead()
+    find_slot_for_child()
+    process_status()
         queue
     queue
     queue

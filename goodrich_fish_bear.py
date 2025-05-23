@@ -49,6 +49,11 @@ class Ecosystem():
                 else:
                     self.ecosystem_contents[i] = None
 
+    def fill_empty_slots(self):
+        for i in range(self.size):
+            if self.ecosystem_contents[i] == []:
+                self.ecosystem_contents[i] = None
+
     def __str__(self):
         return f"Ecosystem  {self.size} and applicable animals: {self.applicable_animals} and contents like {self.ecosystem_contents}\n"
 
@@ -62,11 +67,6 @@ class River(Ecosystem):
         for animal in self.ecosystem_contents:
             if animal is not None:
                 animal.behave()
-
-    def fill_empty_slots(self):
-        for i in range(self.size):
-            if self.ecosystem_contents[i] == []:
-                self.ecosystem_contents[i] = None
 
     def set_contents_from_external(self, new_list):
         if len(self.ecosystem_contents) == len(new_list):
@@ -116,7 +116,6 @@ class Vertebrate(Animal):
         product = self.mate(other_animal)
         if product is None:
             product = self.fight(other_animal)
-            
 
     def mate(self, other_animal):
         if type(self) is type(other_animal):
@@ -141,7 +140,7 @@ class Vertebrate(Animal):
         return None
 
     def settle_newborn(self):
-        
+
 
 class Bear(Vertebrate):
 
@@ -222,7 +221,7 @@ class AnimalDispatcher():
             if len(self.queue) == 0:
                 return index
 
-    def process_status(self,ecosystem_instance):
+    def process_status(self, ecosystem_instance):
         pass
 
 
