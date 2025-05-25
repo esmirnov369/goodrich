@@ -1,51 +1,34 @@
 @startuml
-class Ecosystem {
-    populate_ecosystem()
-    __str__()
-        size
-    applicable_animals
-    __init__()
-}
 class River {
     fluctuate()
+    recieve_contents()
+    populate()
     fill_empty_slots()
-    set_contents_from_external()
-        ecosystem_contents
+    __str__()
+        size
+    contents
     __init__()
 }
 class Animal {
-    behave()
-    _instance_specific_move()
+    move()
+    conflict()
     mate()
     fight()
     set_state()
     __repr__()
     __str__()
         id
-    gender
-    health
-    state
-    state
+    _gender
+    _health
+    _state
+    _state
     __init__()
-}
-class Vertebrate {
-    conflict()
-    mate()
-    fight()
-    settle_newborn()
-        __init__()
 }
 class Bear {
-    _instance_specific_move()
-    behave()
-        move_value
-    __init__()
+        __init__()
 }
 class Fish {
-    _instance_specific_move()
-    behave()
-        move_value
-    __init__()
+        __init__()
 }
 class AnimalDispatcher {
     resolve_moves()
@@ -57,9 +40,7 @@ class AnimalDispatcher {
     queue
     __init__()
 }
-Ecosystem <|-- River
 ABC <|-- Animal
-Animal <|-- Vertebrate
-Vertebrate <|-- Bear
-Vertebrate <|-- Fish
+Animal <|-- Bear
+Animal <|-- Fish
 @enduml
