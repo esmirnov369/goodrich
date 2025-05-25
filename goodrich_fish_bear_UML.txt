@@ -1,6 +1,5 @@
 @startuml
 class River {
-    fluctuate()
     recieve_contents()
     populate()
     fill_empty_slots()
@@ -11,15 +10,21 @@ class River {
 }
 class Animal {
     move()
+    set_move()
+    set_state()
     conflict()
     mate()
     fight()
-    set_state()
     __repr__()
     __str__()
         id
     _gender
     _health
+    _state
+    _move
+    _move
+    _move
+    _state
     _state
     _state
     __init__()
@@ -30,8 +35,18 @@ class Bear {
 class Fish {
         __init__()
 }
-class AnimalDispatcher {
+class Moves_dispatcher {
+    __new__()
+    receive_contents()
+    trigger_moves()
     resolve_moves()
+    return_contents()
+        queue
+    __init__()
+}
+class Conflict_Dispatcher {
+    __new__()
+    receive_contents()
     process_collisions()
     find_slot_for_child()
     process_status()

@@ -31,15 +31,8 @@ class River():
         self.applicable_animals = [Bear, Fish, None]
         self.populate()
 
-    def fluctuate(self):
-        print_debug_info('behold, fluctuation!')
-
     def recieve_contents(self, new_content):
-        val_len = len(new_content) == self.size
-        val_types = all(
-            element in self.applicable_animals for element in new_content)
-        if val_len & val_types:
-            self.contents = new_content
+        self.contents = new_content
 
     def populate(self):
         if not self.applicable_animals:
@@ -69,18 +62,31 @@ class River():
 
 class Animal(ABC):
     DEAD = -1
-    ALIVE_NOMOVE = 0
-    ALIVE_CANMOVE = 1
+    NOMOVE = 0
+    CANMOVE = 1
 
-    def __init__(self, min_health=1, max_health=10, initial_state=ALIVE_CANMOVE):
+    def __init__(self, min_health=1, max_health=10, initial_state=CANMOVE):
         self.id = id(self) % 10000
         self._gender = random.choice(['male', 'female'])
         self._health = random.randint(min_health, max_health)
         self._state = initial_state
+        self._move = 0
 
     def move(self):
-        move = random.choice([-1, 0, 1])
-        return move
+        if self._state == self.CANMOVE:
+            value = random.choice([-1, 0, 1])
+            self._move = self.set_move(value)
+
+    def set_move(self, value):
+        self._move = value
+
+    def set_state(self, state):
+        if state == 0:
+            self._state = self.NOMOVE
+        elif state == 1:
+            self._state = self.CANMOVE
+        elif state == -1:
+            self._state = self.DEAD
 
     def conflict(self, other_animal):
         product = self.mate(other_animal)
@@ -103,14 +109,11 @@ class Animal(ABC):
             if self._state != 1 and other_animal.state != 1:
                 if self._health > other_animal.health:
                     other_animal.set_state(self.DEAD)
-                    self.set_state(self.ALIVE_NOMOVE)
+                    self.set_state(self.NOMOVE)
                 else:
-                    other_animal.set_state(self.ALIVE_NOMOVE)
+                    other_animal.set_state(self.NOMOVE)
                     self.set_state(-1)
         return None
-
-    def set_state(self, value):
-        self._state = value
 
     def __repr__(self):
         return f"{self.__class__.__name__}#{self.id}"
@@ -131,7 +134,13 @@ class Fish(Animal):
         super().__init__(min_health=1, max_health=5)
 
 
-class moves_dispatcher():
+class Moves_dispatcher():
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Moves_dispatcher, cls).__new__(cls)
+        return cls._instance
 
     def __init__(self):
         self.queue = []
@@ -142,16 +151,18 @@ class moves_dispatcher():
         self.slotted_queue = [[] for _ in self.queue]
 
     def trigger_moves(self):
-        for animal in self.queue:
-            if animal is not None:
-                animal.move()
+        for item in self.queue:
+            if item is not None and item._state == 1:
+                item.move()
+                item.set_state(0)
 
     def resolve_moves(self):
         for addr in range(len(self.queue)):
             if self.queue[addr] is not None:
 
                 current_item = self.queue[addr]
-                move = current_item.move_value
+                move = current_item._move
+                current_item.set_move(0)
 
                 # Calculate target index
                 target_index = addr + move
@@ -166,11 +177,21 @@ class moves_dispatcher():
                 else:
                     self.slotted_queue[target_index].append(current_item)
 
-        print_debug_info(self.slotted_queue)
+    def return_contents(self):
         return self.slotted_queue
 
 
-class ConflictDispatcher():
+class Conflict_Dispatcher():
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Moves_dispatcher, cls).__new__(cls)
+        return cls._instance
+
+    def receive_contents(self, some_contents):
+        self.queue = some_contents
+        self.slotted_queue = [[] for _ in self.queue]
 
     def process_collisions(self, ecosystem_instance):
         self.queue = ecosystem_instance.ecosystem_contents
@@ -191,10 +212,16 @@ class ConflictDispatcher():
         pass
 
 
-Volga = River(5)  # Size 6 to match mock lengths
-# Check population (Bear, Fish, None, Bear, Fish, None)
-Volga._test_mode = True
-# Force ecosystem population
+Volga = River(5)
 Volga._forced_choices = [Bear, Fish, Bear, Fish, None]
 print_debug_info(Volga)
-Volga.fluctuate()
+
+
+md = Moves_dispatcher()
+
+md.receive_contents(Volga.contents)
+md.trigger_moves()
+md.resolve_moves()
+
+Volga.recieve_contents(md.return_contents())
+print_debug_info(Volga)
