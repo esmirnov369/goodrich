@@ -22,42 +22,40 @@ def print_debug_info(message):
 
 
 class River():
-    _test_mode = False
-    _forced_choices = []
+    _test_mode = True if DEBUG_MODE is True else False
 
     def __init__(self, size):
-        self.size = size
-        self.contents = [None] * size
-        self.applicable_animals = [Bear, Fish, None]
+        self._size = size
+        self._contents = [None] * size
+        self._applicable_animals = [Bear, Fish, None]
         self.populate()
 
-    def recieve_contents(self, new_content):
-        self.contents = new_content
+    def receive_contents(self, new_content):
+        self._contents = new_content
 
     def populate(self):
-        if not self.applicable_animals:
-            print_debug_info(
-                "No applicable animals to populate the ecosystem.")
-            return
-        else:
-            for i in range(self.size):
-                if self._test_mode is False:
-                    tenant = random.choice(self.applicable_animals)
-                else:
-                    tenant = self._forced_choices[i]
-                if tenant is not None:
-                    # Instantiate the chosen animal class with a name
-                    self.contents[i] = tenant()
-                else:
-                    self.contents[i] = None
+        if self._test_mode is True:
+            self.forced_choices = [Bear, Fish, None, Fish, None]
+        for i in range(self._size):
+            if self._test_mode is False:
+                tenant = random.choice(self._applicable_animals)
+            else:
+                tenant = self.forced_choices[i]
+            if tenant is not None:
+                # Instantiate the chosen animal class with a name
+                self._contents[i] = tenant()
+            else:
+                self._contents[i] = None
 
     def fill_empty_slots(self):
-        for i in range(self.size):
-            if self.contents[i] == []:
-                self.contents[i] = None
+        for i in range(self._size):
+            if self._contents[i] == []:
+                self._contents[i] = None
 
     def __str__(self):
-        return f"River  {self.size} and applicable animals: {self.applicable_animals} and contents like {self.contents}\n"
+        return (f"River size: {self._size}, "
+                f"applicable animals: {self._applicable_animals}, "
+                f"contents: {self._contents}\n")
 
 
 class Animal(ABC):
@@ -148,13 +146,14 @@ class Moves_dispatcher():
 
     def receive_contents(self, some_contents):
         self.queue = some_contents
-        self.slotted_queue = [[] for _ in self.queue]
+        for item in self.queue:
+            self.slotted_queue.append([item])
 
     def trigger_moves(self):
         for item in self.queue:
-            if item is not None and item._state == 1:
+            if item is not None and item._state == item.CANMOVE:
                 item.move()
-                item.set_state(0)
+                item.set_state(item.NOMOVE)
 
     def resolve_moves(self):
         for addr in range(len(self.queue)):
@@ -186,42 +185,40 @@ class Conflict_Dispatcher():
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(Moves_dispatcher, cls).__new__(cls)
+            cls._instance = super(Conflict_Dispatcher, cls).__new__(cls)
         return cls._instance
 
     def receive_contents(self, some_contents):
-        self.queue = some_contents
-        self.slotted_queue = [[] for _ in self.queue]
+        self.slotted_queue = some_contents
 
-    def process_collisions(self, ecosystem_instance):
-        self.queue = ecosystem_instance.ecosystem_contents
-        for slot in self.queue:
-            if slot != None and len(slot) > 1:
+    def process_collisions(self):
+        for slot in self.slotted_queue:
+            if slot is not None and len(slot) > 1:
                 animal_one = slot[0]
                 animal_two = slot[1]
                 animal_one.conflict(animal_two)
         pass
 
-    def find_slot_for_child(self, ecosystem_instance):
-        self.queue = ecosystem_instance.ecosystem_contents
-        for index in range(len(self.queue)):
-            if len(self.queue) == 0:
-                return index
 
-    def process_status(self, ecosystem_instance):
-        pass
+class Queue_Cleaner():
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Conflict_Dispatcher, cls).__new__(cls)
+        return cls._instance
 
 
 Volga = River(5)
-Volga._forced_choices = [Bear, Fish, Bear, Fish, None]
-print_debug_info(Volga)
 
+
+print_debug_info(Volga)
 
 md = Moves_dispatcher()
 
-md.receive_contents(Volga.contents)
+md.receive_contents(Volga._contents)
 md.trigger_moves()
 md.resolve_moves()
 
-Volga.recieve_contents(md.return_contents())
+Volga.receive_contents(md.return_contents())
 print_debug_info(Volga)
