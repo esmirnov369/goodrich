@@ -127,11 +127,14 @@ class Moves_dispatcher():
 
     def __init__(self):
         self.queue = []
-        self.slotted_queue = []
+        
 
-    def receive_contents(self, some_contents):
+    def receive_and_prepcontents(self, some_contents):
         self.queue = some_contents
+        self.slotted_queue = []
         for item in self.queue:
+            if item is not None:
+                item._state = item.CANMOVE
             self.slotted_queue.append([])
 
     def trigger_moves(self):
@@ -197,24 +200,25 @@ class Conflict_Dispatcher():
             if slot is not None and len(slot) > 1:
                 animal_one = slot[0]
                 animal_two = slot[1]
-                if self.resolve_conflict(animal_one, animal_two) == 'mate':
-                    child = animal_one.mate() if animal_one._gender == 'female' else animal_two.mate()
-                    print_debug_info(
-                        f'{animal_one} and {animal_two} mated and produced a {child}')
-                    child.set_state(child.NOMOVE)
-                    self.settle_newborn(child)
-                elif self.resolve_conflict(animal_one, animal_two) == 'fight':
-                    matchresult = animal_one.fight(animal_two)
-                    print_debug_info(f'{animal_one} vs {animal_two} fighting!')
-                    if matchresult == 1:
-                        victor = animal_one
-                        victus = animal_two
-                    elif matchresult == 0:
-                        victor = animal_two
-                        victus = animal_one
-                    victor.set_state(victor.NOMOVE)
-                    victus.set_state(victus.DEAD)
-                    print_debug_info(f'{victor} wins!')
+                if animal_one._state is not (animal_one.DEAD) and animal_two._state is not (animal_two.DEAD):
+                    if self.resolve_conflict(animal_one, animal_two) == 'mate':
+                        child = animal_one.mate() if animal_one._gender == 'female' else animal_two.mate()
+                        print_debug_info(
+                            f'{animal_one} and {animal_two} mated and produced a {child}')
+                        child.set_state(child.NOMOVE)
+                        self.settle_newborn(child)
+                    elif self.resolve_conflict(animal_one, animal_two) == 'fight':
+                        matchresult = animal_one.fight(animal_two)
+                        print_debug_info(f'{animal_one} vs {animal_two} fighting!')
+                        if matchresult == 1:
+                            victor = animal_one
+                            victus = animal_two
+                        elif matchresult == 0:
+                            victor = animal_two
+                            victus = animal_one
+                        victor.set_state(victor.NOMOVE)
+                        victus.set_state(victus.DEAD)
+                        print_debug_info(f'{victor} wins!')
         self.remove_dead_animals()
 
     def remove_dead_animals(self):
@@ -247,39 +251,27 @@ class Conflict_Dispatcher():
 
 
 Volga = River(5)
-
-
 md = Moves_dispatcher()
 cd = Conflict_Dispatcher()
-print("MOVE ONE")
-print_debug_info(Volga)
-# do moves
-md.receive_contents(Volga._contents)
-md.trigger_moves()
-md.resolve_moves()
-moves_processed = md.return_contents()
 
-# check deaders
-cd.receive_contents(moves_processed)
-cd.process_collisions()
-cd.remove_dead_animals()
 
-flat_list = cd.return_flat_contents()
-Volga.receive_contents(flat_list)
-print_debug_info(f'after all transformations: {Volga}')
+for turn in range(0,14):
+    print(f'MOVE {turn}')
+    print_debug_info(Volga)
 
-print("MOVE_TWO")
-# do moves
-md.receive_contents(Volga._contents)
-md.trigger_moves()
-md.resolve_moves()
-moves_processed = md.return_contents()
+    # do moves
+    md.receive_and_prepcontents(Volga._contents)
+    md.trigger_moves()
+    md.resolve_moves()
+    moves_processed = md.return_contents()
 
-# check deaders
-cd.receive_contents(moves_processed)
-cd.process_collisions()
-cd.remove_dead_animals()
+    # check deaders
+    cd.receive_contents(moves_processed)
+    cd.process_collisions()
+    cd.remove_dead_animals()
 
-flat_list = cd.return_flat_contents()
-Volga.receive_contents(flat_list)
-print_debug_info(f'after all transformations: {Volga}')
+    flat_list = cd.return_flat_contents()
+    Volga.receive_contents(flat_list)
+    print_debug_info(f'after all transformations: {Volga}')
+
+
