@@ -53,8 +53,8 @@ class River():
                 self._contents[i] = None
 
     def __str__(self):
-        return (f"River size: {self._size}, "
-                f"applicable animals: {self._applicable_animals}, "
+        return (f"River size: {self._size}\n "
+                f"applicable animals: {self._applicable_animals}\n "
                 f"contents: {self._contents}\n")
 
 
@@ -73,7 +73,7 @@ class Animal(ABC):
     def move(self):
         if self._state == self.CANMOVE:
             value = random.choice([-1, 0, 1])
-            self._move = self.set_move(value)
+            self.set_move(value)
 
     def set_move(self, value):
         self._move = value
@@ -86,32 +86,19 @@ class Animal(ABC):
         elif state == -1:
             self._state = self.DEAD
 
-    def conflict(self, other_animal):
-        product = self.mate(other_animal)
-        if product is None:
-            product = self.fight(other_animal)
 
-    def mate(self, other_animal):
-        if type(self) is type(other_animal):
-            if self._gender != other_animal.gender:
-                child = type(self)()
-                child.set_state(1)
-                self.set_state(1)
-                other_animal.set_state(1)
-                return child
-            else:
-                return None
+    def mate(self):
+        child = type(self)()
+        return child
 
-    def fight(self, other_animal):
-        if (type(self) is not type(other_animal)) or (self._gender == other_animal.gender):
-            if self._state != 1 and other_animal.state != 1:
-                if self._health > other_animal.health:
-                    other_animal.set_state(self.DEAD)
-                    self.set_state(self.NOMOVE)
-                else:
-                    other_animal.set_state(self.NOMOVE)
-                    self.set_state(-1)
-        return None
+
+    def fight(self, other_animal_health):
+        if self._health > other_animal_health:
+            #1 for victory
+            return 1
+        else:
+            #0 for loss
+            return 0            
 
     def __repr__(self):
         return f"{self.__class__.__name__}#{self.id}"
@@ -147,7 +134,7 @@ class Moves_dispatcher():
     def receive_contents(self, some_contents):
         self.queue = some_contents
         for item in self.queue:
-            self.slotted_queue.append([item])
+            self.slotted_queue.append([])
 
     def trigger_moves(self):
         for item in self.queue:
@@ -161,6 +148,7 @@ class Moves_dispatcher():
 
                 current_item = self.queue[addr]
                 move = current_item._move
+                print_debug_info(f'{self.queue[addr]} moves by {move}')
                 current_item.set_move(0)
 
                 # Calculate target index
@@ -196,7 +184,11 @@ class Conflict_Dispatcher():
             if slot is not None and len(slot) > 1:
                 animal_one = slot[0]
                 animal_two = slot[1]
-                animal_one.conflict(animal_two)
+                if type(animal_one)!= type(animal_two):
+                    fight
+                else:
+                    if animal_one._gender == animal_two.gennder:
+                        mate()                    
         pass
 
 
@@ -210,8 +202,6 @@ class Queue_Cleaner():
 
 
 Volga = River(5)
-
-
 print_debug_info(Volga)
 
 md = Moves_dispatcher()
