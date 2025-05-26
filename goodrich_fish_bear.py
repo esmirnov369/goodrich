@@ -35,7 +35,7 @@ class River():
 
     def populate(self):
         if self._test_mode is True:
-            self.forced_choices = [Bear, Fish, None, Fish, None]
+            self.forced_choices = [Bear, Fish, Fish, Fish, None]
         for i in range(self._size):
             if self._test_mode is False:
                 tenant = random.choice(self._applicable_animals)
@@ -86,25 +86,23 @@ class Animal(ABC):
         elif state == -1:
             self._state = self.DEAD
 
-
     def mate(self):
         child = type(self)()
         return child
 
-
-    def fight(self, other_animal_health):
-        if self._health > other_animal_health:
-            #1 for victory
+    def fight(self, other_animal):
+        if self._health > other_animal._health:
+            # 1 for victory
             return 1
         else:
-            #0 for loss
-            return 0            
+            # 0 for loss
+            return 0
 
     def __repr__(self):
-        return f"{self.__class__.__name__}#{self.id}"
+        return f"{self.__class__.__name__} {self._gender} #{self.id}"
 
     def __str__(self):
-        return f"{self.__class__.__name__}#{self.id}"
+        return f"{self.__class__.__name__} {self._gender} #{self.id}"
 
 
 class Bear(Animal):
@@ -176,20 +174,65 @@ class Conflict_Dispatcher():
             cls._instance = super(Conflict_Dispatcher, cls).__new__(cls)
         return cls._instance
 
+    def __init__(self):
+        self.graeveyard = []
+
     def receive_contents(self, some_contents):
         self.slotted_queue = some_contents
+
+    def resolve_conflict(self, animal_one, animal_two):
+        if type(animal_one) is type(animal_two):
+            if animal_one._gender != animal_two._gender:
+                return 'mate'
+        else:
+            return 'fight'
 
     def process_collisions(self):
         for slot in self.slotted_queue:
             if slot is not None and len(slot) > 1:
                 animal_one = slot[0]
                 animal_two = slot[1]
-                if type(animal_one)!= type(animal_two):
-                    fight
-                else:
-                    if animal_one._gender == animal_two.gennder:
-                        mate()                    
-        pass
+                if self.resolve_conflict(animal_one, animal_two) == 'mate':
+                    child = animal_one.mate() if animal_one._gender == 'female' else animal_two.mate()
+                    print_debug_info(
+                        f'{animal_one} and {animal_two} mated and produced a {child}')
+                    child.set_state(child.NOMOVE)
+                    self.settle_newborn(child)
+                elif self.resolve_conflict(animal_one, animal_two) == 'fight':
+                    matchresult = animal_one.fight(animal_two)
+                    print_debug_info(f'{animal_one} vs {animal_two} fighting!')
+                    if matchresult == 1:
+                        victor = animal_one
+                        victus = animal_two
+                    elif matchresult == 0:
+                        victor = animal_two
+                        victus = animal_one
+                    victor.set_state(victor.NOMOVE)
+                    victus.set_state(victus.DEAD)
+                    self.remove_dead_animals()
+
+    def remove_dead_animals(self):
+        for slot in self.slotted_queue:
+            if len(slot) > 1:
+                for animal in slot:
+                    if animal._state == animal.DEAD:
+                        self.graeveyard.append(animal)
+                        slot.remove(animal)
+
+    def settle_newborn(self, newborn):
+        outcome = False
+        for slot in self.slotted_queue:
+            if len(slot) == 0:
+                slot.append(newborn)
+                outcome = True
+                break
+        if outcome == False:
+            self.graeveyard.append(newborn)
+
+    def return_flat_contents(self):
+        flattened_list = [
+            item for sublist in self.slotted_queue for item in sublist]
+        return flattened_list
 
 
 class Queue_Cleaner():
@@ -209,6 +252,12 @@ md = Moves_dispatcher()
 md.receive_contents(Volga._contents)
 md.trigger_moves()
 md.resolve_moves()
+moves_processed = md.return_contents()
+cd = Conflict_Dispatcher()
+cd.receive_contents(moves_processed)
+cd.process_collisions()
+cd.remove_dead_animals()
 
-Volga.receive_contents(md.return_contents())
+flat_list = cd.return_flat_contents()
+Volga.receive_contents(flat_list)
 print_debug_info(Volga)
