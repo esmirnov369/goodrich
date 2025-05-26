@@ -1,7 +1,3 @@
-import random
-from abc import ABC, abstractmethod
-
-
 # Write a Python program to simulate an ecosystem containing two types
 # of creatures, bears and fish. The ecosystem consists of a river, which is
 # modeled as a relatively large list. Each element of the list should be a
@@ -12,6 +8,10 @@ from abc import ABC, abstractmethod
 # of that type of animal, which is placed in a random empty (i.e., previously
 # None) location in the list. If a bear and a fish collide, however, then the
 # fish dies (i.e., it disappears).
+
+import random
+from abc import ABC, abstractmethod
+
 DEBUG_MODE = True
 
 
@@ -161,6 +161,8 @@ class Moves_dispatcher():
                     self.slotted_queue[target_index] = [current_item]
                 else:
                     self.slotted_queue[target_index].append(current_item)
+        print_debug_info(
+            f'Slotted queue after moves calculated: {self.slotted_queue}')
 
     def return_contents(self):
         return self.slotted_queue
@@ -181,11 +183,14 @@ class Conflict_Dispatcher():
         self.slotted_queue = some_contents
 
     def resolve_conflict(self, animal_one, animal_two):
-        if type(animal_one) is type(animal_two):
-            if animal_one._gender != animal_two._gender:
-                return 'mate'
-        else:
-            return 'fight'
+        if animal_one._state != animal_one.DEAD and animal_two._state != animal_two.DEAD:
+            if type(animal_one) is type(animal_two):
+                if animal_one._gender != animal_two._gender:
+                    return 'mate'
+                else:
+                    return 'fight'
+            else:
+                return 'fight'
 
     def process_collisions(self):
         for slot in self.slotted_queue:
@@ -209,7 +214,8 @@ class Conflict_Dispatcher():
                         victus = animal_one
                     victor.set_state(victor.NOMOVE)
                     victus.set_state(victus.DEAD)
-                    self.remove_dead_animals()
+                    print_debug_info(f'{victor} wins!')
+        self.remove_dead_animals()
 
     def remove_dead_animals(self):
         for slot in self.slotted_queue:
@@ -218,6 +224,7 @@ class Conflict_Dispatcher():
                     if animal._state == animal.DEAD:
                         self.graeveyard.append(animal)
                         slot.remove(animal)
+        print_debug_info(f'Graeveyard: {self.graeveyard}')
 
     def settle_newborn(self, newborn):
         outcome = False
@@ -227,37 +234,52 @@ class Conflict_Dispatcher():
                 outcome = True
                 break
         if outcome == False:
+            print_debug_info('no room for newborn')
             self.graeveyard.append(newborn)
 
     def return_flat_contents(self):
+        for slot in self.slotted_queue:
+            if slot == []:
+                slot.append(None)
         flattened_list = [
             item for sublist in self.slotted_queue for item in sublist]
         return flattened_list
 
 
-class Queue_Cleaner():
-    _instance = None
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(Conflict_Dispatcher, cls).__new__(cls)
-        return cls._instance
-
-
 Volga = River(5)
-print_debug_info(Volga)
+
 
 md = Moves_dispatcher()
-
+cd = Conflict_Dispatcher()
+print("MOVE ONE")
+print_debug_info(Volga)
+# do moves
 md.receive_contents(Volga._contents)
 md.trigger_moves()
 md.resolve_moves()
 moves_processed = md.return_contents()
-cd = Conflict_Dispatcher()
+
+# check deaders
 cd.receive_contents(moves_processed)
 cd.process_collisions()
 cd.remove_dead_animals()
 
 flat_list = cd.return_flat_contents()
 Volga.receive_contents(flat_list)
-print_debug_info(Volga)
+print_debug_info(f'after all transformations: {Volga}')
+
+print("MOVE_TWO")
+# do moves
+md.receive_contents(Volga._contents)
+md.trigger_moves()
+md.resolve_moves()
+moves_processed = md.return_contents()
+
+# check deaders
+cd.receive_contents(moves_processed)
+cd.process_collisions()
+cd.remove_dead_animals()
+
+flat_list = cd.return_flat_contents()
+Volga.receive_contents(flat_list)
+print_debug_info(f'after all transformations: {Volga}')
