@@ -575,8 +575,12 @@ class OnlineBookStore():
             if x.name == book_name:
                 self.money += x.price
                 self.sales.append(x)
-                return book
-            break
+                book_to_sell = x
+                break
+        return book_to_sell    
+
+    def return_contents(self):
+        return self.contents    
 
 
 class Book():
@@ -585,14 +589,37 @@ class Book():
         self.author = author
         self.year = year
         self.price = price
+        self.pages = ['yabba','dabba','doo']
 
     def __repr__(self):
         return f"Book(name={self.name}, author={self.author}, year={self.year}, price={self.price})"
+    
+   
+
 
 
 class eBookReader():
     def __init__(self):
         self.purchased_books = []
+        self.balance = 0
+
+
+    def top_up_balance(self,value):
+        self.balance = self.balance + value
+        print(f'balance topped by {value}')
+
+    def buybook(self,book_name,bookstore):
+        menu = bookstore.return_contents()
+        for item in menu:
+
+            if item not in (self.purchased_books) and item.name== book_name:
+                if item.price < self.balance:
+                    self.purchased_books.append(bookstore.sell_book(book_name))
+                    self.balance = self.balance - item.price
+                    print(f'bills of sales {bookstore.sales}')
+                    print(f'contents of purches {self.purchased_books}')
+
+
 
 
 # List of book data
@@ -613,6 +640,14 @@ book_data = [
 # Generate Book objects from the list of book data
 books = [Book(**book_info) for book_info in book_data]
 
+
+AmazonBooks = OnlineBookStore()
 # Print the list of Book objects
 for book in books:
-    print(book)
+    AmazonBooks.add_book(book)
+
+kindle = eBookReader()
+kindle.top_up_balance(10000)
+kindle.buybook("The Hobbit",AmazonBooks)
+
+print('asdf')
