@@ -10,13 +10,12 @@
 # fish dies (i.e., it disappears).
 
 
-
-#Write a simulator, as in the previous project, but add a Boolean gender
-#field and a floating-point strength field to each animal, using an Animal
-#class as a base class. If two animals of the same type try to collide, then
-#they only create a new instance of that type of animal if they are of different
-#genders. Otherwise, if two animals of the same type and gender try to
-#collide, then only the one of larger strength survives.
+# Write a simulator, as in the previous project, but add a Boolean gender
+# field and a floating-point strength field to each animal, using an Animal
+# class as a base class. If two animals of the same type try to collide, then
+# they only create a new instance of that type of animal if they are of different
+# genders. Otherwise, if two animals of the same type and gender try to
+# collide, then only the one of larger strength survives.
 
 import random
 from abc import ABC, abstractmethod
@@ -136,7 +135,6 @@ class Moves_dispatcher():
 
     def __init__(self):
         self.queue = []
-        
 
     def receive_and_prepcontents(self, some_contents):
         self.queue = some_contents
@@ -218,7 +216,8 @@ class Conflict_Dispatcher():
                         self.settle_newborn(child)
                     elif self.resolve_conflict(animal_one, animal_two) == 'fight':
                         matchresult = animal_one.fight(animal_two)
-                        print_debug_info(f'{animal_one} vs {animal_two} fighting!')
+                        print_debug_info(
+                            f'{animal_one} vs {animal_two} fighting!')
                         if matchresult == 1:
                             victor = animal_one
                             victus = animal_two
@@ -264,7 +263,7 @@ md = Moves_dispatcher()
 cd = Conflict_Dispatcher()
 
 
-for turn in range(0,14):
+for turn in range(0, 14):
     print(f'MOVE {turn}')
     print_debug_info(Volga)
 
@@ -282,5 +281,3 @@ for turn in range(0,14):
     flat_list = cd.return_flat_contents()
     Volga.receive_contents(flat_list)
     print_debug_info(f'after all transformations: {Volga}')
-
-

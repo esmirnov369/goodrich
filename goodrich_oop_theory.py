@@ -551,12 +551,68 @@ Internet.check_and_queue()
 print(Alice.archived_packages)
 
 
-#Write a Python program that simulates a system that supports the functions
-#of an e-book reader. You should include methods for users of your
-#system to “buy” new books, view their list of purchased books, and read
-#their purchased books. Your system should use actual books, which have
-#expired copyrights and are available on the Internet, to populate your set
-#of available books for users of your system to “purchase” and read.
+# Write a Python program that simulates a system that supports the functions
+# of an e-book reader. You should include methods for users of your
+# system to “buy” new books, view their list of purchased books, and read
+# their purchased books. Your system should use actual books, which have
+# expired copyrights and are available on the Internet, to populate your set
+# of available books for users of your system to “purchase” and read.
 
 
-class eBookReader
+class OnlineBookStore():
+    def __init__(self):
+        self.contents = []
+        self.money = 0
+        self.sales = []
+
+    def add_book(self, newbook):
+        if type(newbook) is type(book):
+            # todo - check for dupes
+            self.contents.append(newbook)
+
+    def sell_book(self, book_name):
+        for x in self.contents:
+            if x.name == book_name:
+                self.money += x.price
+                self.sales.append(x)
+                return book
+            break
+
+
+class Book():
+    def __init__(self, name, author, year, price):
+        self.name = name
+        self.author = author
+        self.year = year
+        self.price = price
+
+    def __repr__(self):
+        return f"Book(name={self.name}, author={self.author}, year={self.year}, price={self.price})"
+
+
+class eBookReader():
+    def __init__(self):
+        self.purchased_books = []
+
+
+# List of book data
+book_data = [
+    {"name": "The Great Gatsby", "author": "F. Scott Fitzgerald",
+        "year": 1925, "price": 10.99},
+    {"name": "1984", "author": "George Orwell", "year": 1949, "price": 8.99},
+    {"name": "To Kill a Mockingbird", "author": "Harper Lee",
+        "year": 1960, "price": 12.99},
+    {"name": "Pride and Prejudice", "author": "Jane Austen",
+        "year": 1813, "price": 9.99},
+    {"name": "The Catcher in the Rye",
+        "author": "J.D. Salinger", "year": 1951, "price": 11.99},
+    {"name": "The Hobbit", "author": "J.R.R. Tolkien", "year": 1937, "price": 14.99},
+    {"name": "Moby Dick", "author": "Herman Melville", "year": 1851, "price": 13.99}
+]
+
+# Generate Book objects from the list of book data
+books = [Book(**book_info) for book_info in book_data]
+
+# Print the list of Book objects
+for book in books:
+    print(book)
