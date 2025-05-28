@@ -566,9 +566,11 @@ class OnlineBookStore():
         self.sales = []
 
     def add_book(self, newbook):
-        if type(newbook) is type(book):
-            # todo - check for dupes
+        if isinstance(newbook, Book) and newbook not in self.contents:
             self.contents.append(newbook)
+            print(f'added {newbook.name}')
+        else:
+            print("error")
 
     def sell_book(self, book_name):
         for x in self.contents:
@@ -577,10 +579,10 @@ class OnlineBookStore():
                 self.sales.append(x)
                 book_to_sell = x
                 break
-        return book_to_sell    
+        return book_to_sell
 
     def return_contents(self):
-        return self.contents    
+        return self.contents
 
 
 class Book():
@@ -589,13 +591,10 @@ class Book():
         self.author = author
         self.year = year
         self.price = price
-        self.pages = ['yabba','dabba','doo']
+        self.pages = ['yabba', 'dabba', 'doo']
 
     def __repr__(self):
         return f"Book(name={self.name}, author={self.author}, year={self.year}, price={self.price})"
-    
-   
-
 
 
 class eBookReader():
@@ -603,23 +602,25 @@ class eBookReader():
         self.purchased_books = []
         self.balance = 0
 
+    def read_book(self, book_name):
+        for x in self.purchased_books:
+            if x.name == book_name:
+                return x.pages
 
-    def top_up_balance(self,value):
+    def top_up_balance(self, value):
         self.balance = self.balance + value
         print(f'balance topped by {value}')
 
-    def buybook(self,book_name,bookstore):
+    def buybook(self, book_name, bookstore):
         menu = bookstore.return_contents()
         for item in menu:
 
-            if item not in (self.purchased_books) and item.name== book_name:
+            if item not in (self.purchased_books) and item.name == book_name:
                 if item.price < self.balance:
                     self.purchased_books.append(bookstore.sell_book(book_name))
                     self.balance = self.balance - item.price
                     print(f'bills of sales {bookstore.sales}')
                     print(f'contents of purches {self.purchased_books}')
-
-
 
 
 # List of book data
@@ -646,8 +647,11 @@ AmazonBooks = OnlineBookStore()
 for book in books:
     AmazonBooks.add_book(book)
 
+
+for book in books:
+    AmazonBooks.add_book(book)
 kindle = eBookReader()
 kindle.top_up_balance(10000)
-kindle.buybook("The Hobbit",AmazonBooks)
+kindle.buybook("The Hobbit", AmazonBooks)
 
-print('asdf')
+print(kindle.read_book("The Hobbit"))
