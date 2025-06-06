@@ -57,7 +57,7 @@ def unique1(S):
 
 
 # Generate values for n
-n = np.linspace(1, 100, 400)  # from 1 to 100, with 400 points
+n = np.linspace(1, 20, 400)  # from 1 to 50, with 400 points
 
 # Compute log(n)
 y0 = 8 * n
@@ -73,9 +73,9 @@ plt.plot(n, y2, label=' 4 n log n', color='green')
 plt.plot(n, y3, label=' n to the 3rd', color='yellow')
 # plt.plot(n, y4, label=' 2 to the n2th', color='grey')
 
-plt.title('Plot of log(n)')
+plt.title('Plot all kins of n')
 plt.xlabel('n')
-plt.ylabel('log(n)')
+plt.ylabel('progress')
 plt.grid(True)
 plt.legend()
 plt.show()
