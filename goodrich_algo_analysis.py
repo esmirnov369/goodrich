@@ -30,14 +30,11 @@ def prefix_average2(values_list):
 
 
 start = time.perf_counter()
-
-
-x = prefix_average1(sample_data)
+#x = prefix_average1(sample_data)
 end = time.perf_counter()
 print(f"Elapsed time: {end - start:.6f} seconds")
-
 start = time.perf_counter()
-z = prefix_average2(sample_data)
+#z = prefix_average2(sample_data)
 end = time.perf_counter()
 print(f"Elapsed time: {end - start:.6f} seconds")
 
@@ -67,13 +64,28 @@ y3 = n**3
 y4 = 2**n
 
 # Plot
-plt.plot(n, y0, label='8 n', color='blue')
-plt.plot(n, y1, label='2 n squared', color='red')
-plt.plot(n, y2, label=' 4 n log n', color='green')
-plt.plot(n, y3, label=' n to the 3rd', color='yellow')
-# plt.plot(n, y4, label=' 2 to the n2th', color='grey')
+if 1 > 2:
+    plt.plot(n, y0, label='8 n', color='blue')
+    plt.plot(n, y1, label='2 n squared', color='red')
+    plt.plot(n, y2, label=' 4 n log n', color='green')
+    plt.plot(n, y3, label=' n to the 3rd', color='yellow')
+    plt.plot(n, y4, label=' 2 to the n2th', color='grey')
 
-plt.title('Plot all kins of n')
+    plt.title('Plot all kins of n')
+    plt.xlabel('n')
+    plt.ylabel('progress')
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+
+x = np.linspace(1, 20, 400)  # from 1 to 50, with 400 points
+
+B =  2 * x**2
+A = 8 * x * np.log2(x)
+plt.plot(n, B, label='B', color='blue')
+plt.plot(n, A, label='A', color='red')
+plt.title('Plot the results')
 plt.xlabel('n')
 plt.ylabel('progress')
 plt.grid(True)
