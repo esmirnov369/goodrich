@@ -79,12 +79,37 @@ if 1 > 2:
     plt.show()
 
 
-x = np.linspace(1, 20, 400)  # from 1 to 50, with 400 points
+    x = np.linspace(1, 20, 400)  # from 1 to 50, with 400 points
 
-B =  2 * x**2
-A = 8 * x * np.log2(x)
-plt.plot(n, B, label='B', color='blue')
-plt.plot(n, A, label='A', color='red')
+    B =  2 * x**2
+    A = 8 * x * np.log2(x)
+    plt.plot(x, B, label='B', color='blue')
+    plt.plot(x, A, label='A', color='red')
+    plt.title('Plot the results')
+    plt.xlabel('n')
+    plt.ylabel('progress')
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+
+
+#The number of operations executed by algorithms A and B is 40n2 and
+#2n3, respectively. Determine n0 such that A is better than B for n ≥ n0.
+
+# 40 * x**2 == 2*x**3
+# 40x**2 - 2x**3 = 0
+# 2x**2(n-20) = 0
+# x = 0 or x = 20, probably 20 - checking 
+
+x = np.linspace(1, 50, 400)  # from 1 to 50, with 400 points
+
+A = 40 * x**2
+B = 2*x**3
+
+
+plt.plot(x, A, label='A', color='red')
+plt.plot(x, B, label='B', color='blue')
 plt.title('Plot the results')
 plt.xlabel('n')
 plt.ylabel('progress')
