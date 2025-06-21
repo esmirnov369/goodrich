@@ -221,3 +221,45 @@ def nlogn_3wayset(set1,set2,set3):
 sequence = [1,2,3,4,5,3,3,12,3,4,5,6,7,8,98,5,4,3,35,6,7,8,9]
 heap = []
 
+def find_min_max(sequence):
+    temp_min = temp_max = sequence[0]
+    for number in range(0,len(sequence),2):
+        a,b = sequence[number],sequence[number+1]
+        b = sequence[number+1] if (number+1 < len(sequence)) else None  # Avoid IndexError
+        if b is not None:  # Even-length pair
+            if a > b:
+                if a > temp_max:
+                    temp_max = a
+                if b < temp_min:
+                    temp_min = b
+            else:
+                if b > temp_max:
+                    temp_max = b
+                if a < temp_min:
+                    temp_min = a
+        else:
+            if a > temp_max: temp_max = a
+            elif a < temp_min: temp_min = a             
+    return temp_min, temp_max        
+
+
+
+
+#A sequence S contains n−1 unique integers in the range [0,n−1], that
+#is, there is one number from this range that is not in S. Design an O(n)-
+#time algorithm for finding that number. You are only allowed to use O(1)
+#additional space besides the sequence S itself.
+
+n = 5
+number_not_in_seq = 2
+#init seq of len n-1 unique ints in range 0,n-1
+seq_S = [0,1,3,4]
+
+num_found = None
+
+for number in range(len(seq_S)):
+    if seq_S[number] != number:
+        num_found = number
+        break
+
+print(num_found == number_not_in_seq)

@@ -20,7 +20,9 @@ def draw_ruler(num_inches, major_length):
         draw_line(major_length, str(j))  # draw inch j line and label
 
 
-#draw_ruler(15,4)
+draw_ruler(5,3)
+
+
 
 
 def calc_factorial(number):
@@ -30,7 +32,7 @@ def calc_factorial(number):
         return number*calc_factorial(number-1)
     
 
-def mark_half(total_length,marking_length)
+def mark_half(total_length,marking_length):
     if total_length == 1:
         print(marking_length)
     else:
