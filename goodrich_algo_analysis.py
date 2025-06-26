@@ -257,9 +257,19 @@ seq_S = [0,1,3,4]
 
 num_found = None
 
-for number in range(len(seq_S)):
-    if seq_S[number] != number:
-        num_found = number
-        break
+expected_sum = (n*(n-1))//2
+actual_sum = 0
+for number in seq_S:
+    actual_sum = actual_sum + number
 
-print(num_found == number_not_in_seq)
+print(expected_sum - actual_sum)
+
+
+def bad_fibonacci(n):
+    """Return the nth Fibonacci number."""
+    if n <= 1:
+        return n
+    else:
+        return bad_fibonacci(n - 2) + bad_fibonacci(n - 1)
+    
+print(bad_fibonacci(6))
