@@ -20,7 +20,7 @@ def draw_ruler(num_inches, major_length):
         draw_line(major_length, str(j))  # draw inch j line and label
 
 
-draw_ruler(5,3)
+#draw_ruler(5,3)
 
 
 
@@ -35,13 +35,15 @@ def calc_factorial(number):
 
 # function that finds the minimum and maximum
 #values in a sequence without using any loops.
-def recursive_find_minmax(sequence,tempmax,tempmin):
-    if sequence[0] > tempmax:
+def recursive_find_minmax(sequence,tempmax = None,tempmin=None):
+    if tempmax is None or sequence[0] > tempmax:
         tempmax = sequence[0]
-    if sequence[0] < tempmin:
+    if tempmin is None or sequence[0] < tempmin:
         tempmin = sequence[0]
-    if len(sequence[1:])>0:
-        rest_of_sequence = sequence[1:]        
-        recursive_find_minmax(rest_of_sequence,tempmax,tempmin)
+    if len(sequence[1:])==0:
+        return tempmax,tempmin
     else:
-        return tempmax,tempmin     
+        rest_of_sequence = sequence[1:]        
+        return recursive_find_minmax(rest_of_sequence,tempmax,tempmin)        
+
+print(recursive_find_minmax([1,66,-1]))         
