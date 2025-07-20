@@ -32,15 +32,16 @@ def calc_factorial(number):
         return number*calc_factorial(number-1)
     
 
-def mark_half(total_length,marking_length):
-    if total_length == 1:
-        print(marking_length)
+
+# function that finds the minimum and maximum
+#values in a sequence without using any loops.
+def recursive_find_minmax(sequence,tempmax,tempmin):
+    if sequence[0] > tempmax:
+        tempmax = sequence[0]
+    if sequence[0] < tempmin:
+        tempmin = sequence[0]
+    if len(sequence[1:])>0:
+        rest_of_sequence = sequence[1:]        
+        recursive_find_minmax(rest_of_sequence,tempmax,tempmin)
     else:
-        mark_half(total_length-1,marking_length-1)
-
-def my_ruler(total_length,marking_length):
-    print ("-"*marking_length+"\n")
-    mark_half(total_length,marking_length-1)
-    print ("-"*marking_length+"\n")   
-
-my_ruler(15,2)   
+        return tempmax,tempmin     
