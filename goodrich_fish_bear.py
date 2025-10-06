@@ -263,7 +263,7 @@ md = Moves_dispatcher()
 cd = Conflict_Dispatcher()
 
 
-for turn in range(0, 14):
+for turn in range(0, 20):
     print(f'MOVE {turn}')
     print_debug_info(Volga)
 

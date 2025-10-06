@@ -47,3 +47,41 @@ def recursive_find_minmax(sequence,tempmax = None,tempmin=None):
         return recursive_find_minmax(rest_of_sequence,tempmax,tempmin)        
 
 print(recursive_find_minmax([1,66,-1]))         
+
+#Describe a recursive algorithm to compute the integer part of the base-two
+#logarithm of n using only addition and integer division.
+
+def recursive_calcm(input_number,depth = 0):
+    if input_number < 1:
+        return depth
+    else:
+        return recursive_calcm(input_number//2,depth+1)    
+    
+result = recursive_calcm(10)
+print(result)    
+
+#Describe an efficient recursive function for solving the element uniqueness
+#problem, which runs in time that is at most O(n2) in the worst case
+#without using sorting.
+
+def el_unique(sequence):
+    if  len(sequence) == 1:
+        return True
+    if sequence[0] in sequence[1:]:
+        return False
+    else:
+        return el_unique(sequence[1:])
+    
+print(el_unique([2,'y','7','y',0]))
+
+
+#C-4.12 Give a recursive algorithm to compute the product of two positive integers,
+#m and n, using only addition and subtraction.    
+
+def recursive_product(m,n,product = 0):
+    if n == 1:
+        return product + m
+    else:
+        return recursive_product(m,n-1,product+m)
+
+print(recursive_product(33,3))        
