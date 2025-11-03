@@ -85,3 +85,13 @@ def recursive_product(m,n,product = 0):
         return recursive_product(m,n-1,product+m)
 
 print(recursive_product(33,3))        
+
+
+#C-4.15 Write a recursive function that will output all the subsets of a set of n
+#elements (without repeating any subsets).
+
+def output_subsets(input_set):
+    if len(input_set) == 0:
+        return {}
+    else:
+        return(output_subsets(input_set))
