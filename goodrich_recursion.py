@@ -46,7 +46,7 @@ def recursive_find_minmax(sequence,tempmax = None,tempmin=None):
         rest_of_sequence = sequence[1:]        
         return recursive_find_minmax(rest_of_sequence,tempmax,tempmin)        
 
-print(recursive_find_minmax([1,66,-1]))         
+#print(recursive_find_minmax([1,66,-1]))         
 
 #Describe a recursive algorithm to compute the integer part of the base-two
 #logarithm of n using only addition and integer division.
@@ -58,7 +58,7 @@ def recursive_calcm(input_number,depth = 0):
         return recursive_calcm(input_number//2,depth+1)    
     
 result = recursive_calcm(10)
-print(result)    
+#print(result)    
 
 #Describe an efficient recursive function for solving the element uniqueness
 #problem, which runs in time that is at most O(n2) in the worst case
@@ -72,7 +72,7 @@ def el_unique(sequence):
     else:
         return el_unique(sequence[1:])
     
-print(el_unique([2,'y','7','y',0]))
+#print(el_unique([2,'y','7','y',0]))
 
 
 #C-4.12 Give a recursive algorithm to compute the product of two positive integers,
@@ -84,14 +84,16 @@ def recursive_product(m,n,product = 0):
     else:
         return recursive_product(m,n-1,product+m)
 
-print(recursive_product(33,3))        
+#print(recursive_product(33,3))        
 
 
 #C-4.15 Write a recursive function that will output all the subsets of a set of n
 #elements (without repeating any subsets).
 
-def output_subsets(input_set):
-    if len(input_set) == 0:
-        return {}
-    else:
-        return(output_subsets(input_set))
+def output_subsets(params_data):
+    curr_subset = set()
+    for item in params_data:
+        curr_subset.add(item)
+    print(curr_subset)
+
+output_subsets({1,2,3,4})        
