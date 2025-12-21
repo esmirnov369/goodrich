@@ -90,10 +90,11 @@ def recursive_product(m,n,product = 0):
 #C-4.15 Write a recursive function that will output all the subsets of a set of n
 #elements (without repeating any subsets).
 
-def output_subsets(params_data):
-    curr_subset = set()
+def output_subsets(params_data,curr_subset = set()):
     for item in params_data:
+        
+        output_subsets(curr_subset)
         curr_subset.add(item)
-    print(curr_subset)
+        output_subsets(curr_subset)
 
-output_subsets({1,2,3,4})        
+output_subsets(list({1,2,3,4}))        
